@@ -25,6 +25,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 	        $_SESSION["username"]=$usernamed;
 	        $_SESSION["id_kasir"]=$row["id"];
 			}
+			$_SESSION['level_user']=1;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
 			header("");
 			}else{
@@ -41,6 +42,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 				$_SESSION["username"]=$usernamed;
 	        	$_SESSION["id_kasir"]=$row["id"];
 			}
+			$_SESSION['level_user']=0;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
 			header("location:../frontend/dashboard.php");
 		}else{

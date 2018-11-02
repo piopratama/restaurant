@@ -3,8 +3,8 @@
 	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 	$url=$protocol."".$_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
 	$_SESSION['url']=$url;
+	include('./layout/headercasier.php');
 ?>
-	<?php include('./layout/headercasier.php'); ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['url']; ?>css/loginStyle.css">
 	<body>
 		
