@@ -93,7 +93,7 @@ body {font-family: Arial;}
     <option value="Meja 4">Meja 4</option>
 </select>
 <input type="submit" value="Submit" class="order">
-<div id="Food" class="tabcontent scroll">
+<div id="Food" class="tabcontent">
   <div class="row" >
       <?php for($i=1;$i<=10;$i++){?>
           <div class="col-sm-3 myItemFood" id="<?php echo "food-".$i; ?>" style="margin:10px 0">
@@ -107,7 +107,7 @@ body {font-family: Arial;}
   </div>
 </div>
 
-<div id="Drink" class="tabcontent scroll">
+<div id="Drink" class="tabcontent">
     <div class="row">
         <?php for($i=1;$i<=10;$i++){?>
             <div class="col-sm-3 myItemDrink" style="margin:10px 0">
