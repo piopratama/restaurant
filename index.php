@@ -1,18 +1,7 @@
 <?php session_start(); ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title></title>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		<link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="css/loginStyle.css">
-	</head>
+	<?php include('./layout/headercasier.php'); ?>
+	<link rel="stylesheet" type="text/css" href="./css/loginStyle.css">
 	<body>
-		
 		
 		<div class="container-fluid">
 				<div class="row">
@@ -49,21 +38,13 @@
 					
 						<div class="form-group">
 							<label for="">Username</label>
-							<input type="text" name="username" class="form-control" id="" placeholder="Username" required="required">
+							<input type="text" name="username" class="form-control" id="username" placeholder="Username" required="required">
 						</div>
 						
 						<div class="form-group">
 							<label for="">Password</label>
-							<input type="password" name="password" class="form-control" id="" placeholder="Password" required="required">
+							<input type="password" name="password" class="form-control" id="password" placeholder="Password" required="required">
 						</div>
-						<!-- <div class="form-group">
-							<label>Level</label>
-							<select name="level" class="form-control">
-								<option value="admin">Admin</option>
-								<option value="casier">Casir</option>
-								
-							</select>
-						</div> -->
 						
 					
 						<button type="submit" class="btn btn-primary">Login</button>
@@ -79,9 +60,7 @@
 			$session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
 			unset($_SESSION['message']);
 		?>
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<?php include('./layout/footercasier.php'); ?>
 		<script>
 			$(document).ready(function() {
 				var message='<?php echo $session_value;?>';
