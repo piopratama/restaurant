@@ -1,6 +1,11 @@
-<?php session_start(); ?>
+<?php 
+	session_start();
+	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+	$url=$protocol."".$_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+	$_SESSION['url']=$url;
+?>
 	<?php include('./layout/headercasier.php'); ?>
-	<link rel="stylesheet" type="text/css" href="./css/loginStyle.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['url']; ?>css/loginStyle.css">
 	<body>
 		
 		<div class="container-fluid">
@@ -16,7 +21,7 @@
 										<span class="icon-bar"></span>
 										<span class="icon-bar"></span>
 									</button>
-									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Shop</a>
+									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Resto</a>
 								</div>
 								<div class="collapse navbar-collapse navbar-ex1-collapse">						
 									<ul class="nav navbar-nav navbar-right">

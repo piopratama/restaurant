@@ -1,4 +1,6 @@
-<?php include("../layout/headercasier.php");?>
+<?php
+    session_start();
+?>
 
 <style>
 body {font-family: Arial;}
@@ -57,7 +59,6 @@ body {font-family: Arial;}
   scrollbar-arrow-color: #6F4709;
 }
 </style>
-<head>
 
 <body>
 <h2>Menu</h2>
@@ -135,11 +136,7 @@ body {font-family: Arial;}
 </div>
 
 
-<script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<?php include('../layout/footercasier.php'); ?>
 <script>
 function openCity(evt, cityName) {
     var i, tabcontent, tablinks;
