@@ -4,7 +4,7 @@ if(empty($_SESSION['username'])){
 	header("location:index.php");
 }
 ?>
-	<?php include('./layout/headercasier.php'); ?>
+	<?php include('../layout/headercasier.php'); ?>
 	<link rel="stylesheet" type="text/css" href="./css/directPayStyle.css">
 	<body>
 		

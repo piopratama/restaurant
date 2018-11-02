@@ -10,7 +10,7 @@ $data = mysqli_query($conn, "SELECT * FROM tb_restaurant WHERE id='$id'")
 
 
 ?>
-	<?php include('./layout/headercasier.php'); ?>
+	<?php include('../layout/headercasier.php'); ?>
 	<link rel="stylesheet" type="text/css" href="./css/directPayStyle.css">
 
 	<body>
