@@ -97,8 +97,7 @@ body {font-family: Arial;}
   <div class="row" >
       <?php for($i=1;$i<=10;$i++){?>
           <div class="col-sm-3 myItemFood" id="<?php echo "food-".$i; ?>" style="margin:10px 0">
-            <img src="../assets/img/<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style=" Height:150px;">
-            <input type="checkbox" name="makanan[]" value="makanan<?php echo $i;  ?>">
+            <img src="../assets/img/<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style=" Height:150px;Width: 250px;" id="food-<?php echo $i; ?>">
             <figcaption align="center">Makanan <?php echo $i ?> </figcaption>
             <figcaption align="center"><b>IDR : .......</b> <?php ?> </figcaption>
           </div>
@@ -111,8 +110,7 @@ body {font-family: Arial;}
     <div class="row">
         <?php for($i=1;$i<=10;$i++){?>
             <div class="col-sm-3 myItemDrink" style="margin:10px 0">
-                <img src="../assets/img/d<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style="Height:150px;">
-                <input type="checkbox" name="minuman[]" value="minuman<?php echo $i;  ?>">
+                <img src="../assets/img/d<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style=" Height:150px;Width: 250px;" id="drink-<?php echo $i; ?>">
                 <figcaption align="center">Minuman <?php echo $i?> </figcaption>
                 <figcaption align="center"><b>IDR : .......</b> <?php ?> </figcaption>
             </div>
@@ -172,19 +170,6 @@ $(document).ready(function(){
         $("#id_food").val(id);
         $("#exampleModal").modal('show');
         
-    });
-
-    $(".order").click(function(){
-        var data = $(".form-order").serialize();
-        
-        $.ajax({
-            type:'POST',
-            url:'../process/proses.php',
-            data:data,
-            success: function(){
-                alert("alhamadulliha sukses");
-            }
-        })
     });
 })
 
