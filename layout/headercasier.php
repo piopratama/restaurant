@@ -10,4 +10,14 @@
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
     <link href="<?php echo $_SESSION['url']; ?>assets/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo $_SESSION['url']; ?>assets/chart.css">
+    <link rel="stylesheet" href="<?php echo $_SESSION['url']; ?>css/myStyle.css">
+
+    <?php
+    function rupiah($angka){
+	
+        $hasil_rupiah = number_format($angka,0,',','.');
+        return $hasil_rupiah;
+     
+    }
+    ?>
 </head>

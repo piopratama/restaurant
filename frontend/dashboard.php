@@ -13,167 +13,141 @@
             }
         }
     }
+    $title="Dashboard";
     include('../layout/headercasier.php');
+
+    require('../koneksi.php');
+    $sql1 = "SELECT id, meja FROM tb_meja";
+    $data_meja = $conn->query($sql1);
+
+    $sql2 = "SELECT id, item, price, kategori FROM tb_menu where `status`='yes';";
+    $data_menu = $conn->query($sql2);
 ?>
-
-<style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-    background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-    background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-.scroll{
-  height: 200px;
-  
-  padding: 10px;
-  overflow: scroll;
-  height: 300px;
-  
-  /*script tambahan khusus untuk IE */
-  scrollbar-face-color: #CE7E00; 
-  scrollbar-shadow-color: #FFFFFF; 
-  scrollbar-highlight-color: #6F4709; 
-  scrollbar-3dlight-color: #11111; 
-  scrollbar-darkshadow-color: #6F4709; 
-  scrollbar-track-color: #FFE8C1; 
-  scrollbar-arrow-color: #6F4709;
-}
-</style>
-
 <body>
-<h2>Menu</h2>
-
-
-
-<div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'Food')">Food</button>
-  <button class="tablinks" onclick="openCity(event, 'Drink')">Drink</button>
-  
-</div>
-<form method="post" action="" class="form-order">
-<select name="meja">
-    <option value="">-- Meja --</option>
-    <option value="Meja 1">Meja 1</option>
-    <option value="Meja 2">Meja 2</option>
-    <option value="Meja 3">Meja 3</option>
-    <option value="Meja 4">Meja 4</option>
-</select>
-<input type="submit" value="Submit" class="order">
-<div id="Food" class="tabcontent">
-  <div class="row" >
-      <?php for($i=1;$i<=10;$i++){?>
-          <div class="col-sm-3 myItemFood" id="<?php echo "food-".$i; ?>" style="margin:10px 0">
-            <img src="../assets/img/<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style=" Height:150px;Width: 250px;" id="food-<?php echo $i; ?>">
-            <figcaption align="center">Makanan <?php echo $i ?> </figcaption>
-            <figcaption align="center"><b>IDR : .......</b> <?php ?> </figcaption>
-          </div>
-         
-      <?php }?>
-  </div>
-</div>
-
-<div id="Drink" class="tabcontent">
-    <div class="row">
-        <?php for($i=1;$i<=10;$i++){?>
-            <div class="col-sm-3 myItemDrink" style="margin:10px 0">
-                <img src="../assets/img/d<?php echo $i?>.jpg" class="rounded mx-auto d-block" alt="gambar1" style=" Height:150px;Width: 250px;" id="drink-<?php echo $i; ?>">
-                <figcaption align="center">Minuman <?php echo $i?> </figcaption>
-                <figcaption align="center"><b>IDR : .......</b> <?php ?> </figcaption>
+    <form method="POST" action="">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="text-center">Dashboard</h1>
+                </div>
             </div>
-            
-        <?php }?>
-    </div>
-</div>
-
-</form>
-    <div class="tampil-orderan"></div>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-            <input type="hidden" class="form-control" id="id_food" name="id_food">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="">Date</label>
+                        <input type="text" class="form-control" id="" name="date" placeholder="Date" value="<?php echo Date('Y-m-d'); ?>" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Customer</label>
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Customer">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="">Table</label>
+                        <select name="customer_table" id="customer_table" class="form-control" require="required">
+                            <option value="">-- Select Table --</option>
+                            <?php
+                            while($row=$data_meja->fetch_assoc())
+                            {
+                            ?>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['meja']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Search Menu</label>
+                        <select id="search_menu" class="form-control">
+                            <option value="">-- Search Menu --</option>
+                            <?php
+                            while($row=$data_menu->fetch_assoc())
+                            {
+                            ?>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['item']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="">Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2 class="text-center">Menu</h2>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#food" aria-controls="food" role="tab" data-toggle="tab">Food</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#beverage" aria-controls="beverage" role="tab" data-toggle="tab">Beverage</a>
+                            </li>
+                        </ul>
+                            
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="food">
+                                <h3 class="text-center">Food</h3>
+                                <?php
+                                mysqli_data_seek($data_menu, 0);
+                                while($row=$data_menu->fetch_assoc())
+                                {
+                                    if($row['kategori']==1)
+                                    {
+                                ?>
+                                    <div class="col-sm-3">
+                                        <p class="text-center"><?php echo $row['item'] ?></p>
+                                        <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73">
+                                        <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                    </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="beverage">
+                                <h3 class="text-center">Beverage</h3>
+                                <?php
+                                mysqli_data_seek($data_menu, 0);
+                                while($row=$data_menu->fetch_assoc())
+                                {
+                                    if($row['kategori']==2)
+                                    {
+                                ?>
+                                    <div class="col-sm-3">
+                                        <p class="text-center"><?php echo $row['item'] ?></p>
+                                        <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73">
+                                        <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                    </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-sm-6">
+                    <h2 class="text-center">Order</h2>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="qty">Qty:</label>
-            <input type="number" class="form-control" id="qty">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<?php include('../layout/footercasier.php'); ?>
-<script>
-function openCity(evt, cityName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-$(document).ready(function(){
-    $(".myItemFood").click(function(){
-        var id=$(this).attr('id').split("-")[1];
-        $("#id_food").val(id);
-        $("#exampleModal").modal('show');
-        
-    });
-})
-
-</script>
-
-
-<?php include("../layout/footercasier.php");?>
+    </form>
+    <?php include('../layout/footercasier.php'); ?>
+    <script>
+        $(document).ready(function () {
+            $("#customer_table").select2();
+            $("#search_menu").select2();
+        });
+    </script>
+</body>
+</html>

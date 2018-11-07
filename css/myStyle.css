@@ -1,0 +1,37 @@
+html, body {
+    font-family: 'Slabo 27px', serif;
+}
+
+#food > .col-sm-3 {
+    margin-top: 10px;
+}
+
+#beverage > .col-sm-3 {
+    margin-top: 10px;
+}
+
+#food > .col-sm-3 > img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#beverage > .col-sm-3 img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.select2 {
+    width:100%!important;
+}
+
+.select2-selection__rendered {
+    line-height: 31px !important;
+}
+.select2-container .select2-selection--single {
+    height: 35px !important;
+}
+.select2-selection__arrow {
+    height: 34px !important;
+}
