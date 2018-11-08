@@ -2,6 +2,11 @@ html, body {
     font-family: 'Slabo 27px', serif;
 }
 
+.container-fluid{
+    background: #f0f0f0;
+    margin-bottom: 20px;
+}
+
 #food > .col-sm-3 {
     margin-top: 10px;
 }
@@ -22,6 +27,23 @@ html, body {
 	display: block;
 }
 
+#order > .col-sm-12 {
+    margin: 20px auto;
+}
+
+#deleteIcon{
+
+}
+
+.menuControl{
+    width: 200px;
+    height: 50px;
+}
+
+#orderBtn{
+    margin: 10px 0px;
+}
+
 .select2 {
     width:100%!important;
 }
@@ -34,4 +56,19 @@ html, body {
 }
 .select2-selection__arrow {
     height: 34px !important;
+}
+
+.buttonMenu{
+	width: 80%;
+	height: 10%;
+	font-size: 35px;
+	margin-top: 10%;
+}
+
+.navbar-default .navbar-nav>li>a{
+	color: #f0f0f0 !important;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+	color: #000000 !important;
 }
