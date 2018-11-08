@@ -19,7 +19,7 @@
 	$user = mysqli_query($conn, "SELECT nama FROM tb_employee where online_status=1");
 ?>
 	<body>
-		<div class="container-fluid">
+		<div class="container-fluid dashboard">
 			<div class="row">
                 <div class="col-sm-9">
                     <h1 class="text-left">Dashboard</h1>

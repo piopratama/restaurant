@@ -2,7 +2,7 @@ html, body {
     font-family: 'Slabo 27px', serif;
 }
 
-.container-fluid{
+.dashboard{
     background: #f0f0f0;
     margin-bottom: 20px;
 }

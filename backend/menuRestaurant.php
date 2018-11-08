@@ -16,6 +16,7 @@
     $title="Dashboard";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
+	$menu = mysqli_query($conn, "SELECT  FROM tb_menu INNER JOIN tb_kategori ON ");
 ?>
 
 	<body>
@@ -34,7 +35,7 @@
 										<span class="icon-bar"></span>
 										<span class="icon-bar"></span>
 									</button>
-									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Shop</a>
+									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Restaurant</a>
 								</div>
 						
 								<!-- Collect the nav links, forms, and other content for toggling -->
@@ -78,7 +79,7 @@
 										<th>ID</th>
 										<th>Item</th>
 										<th>Price</th>
-										<th>Type</th>
+										<th>Category</th>
 										<th>Stock</th>
 										<th>Image</th>
 									</tr>
@@ -91,7 +92,7 @@
 										<td><?php echo $no;?></td>
 										<td><?php echo $data["item"];?></td>
 										<td><?php echo $data["price"];?></td>
-										<td><?php echo $data["type"];?></td>
+										<td><?php echo $data["kategori"];?></td>
 										<td><?php echo $data["stock"];?></td>
 										
 										<td><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $data['image'] ).'" height="100" widht="100"/>';?></td>
