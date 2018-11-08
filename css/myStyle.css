@@ -2,11 +2,6 @@ html, body {
     font-family: 'Slabo 27px', serif;
 }
 
-.container-fluid{
-    background: #f0f0f0;
-    margin-bottom: 20px;
-}
-
 #food > .col-sm-3 {
     margin-top: 10px;
 }

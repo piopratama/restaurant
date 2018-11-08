@@ -13,9 +13,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 	foreach($sql as $a){
 		$b = $a['level'];
 	}
-	echo $b;
-
-	  
+	
 	if($b=='1'){
 		
 		$sql = "SELECT id,username FROM tb_employee WHERE username = '$usernamed' AND `password`=MD5('".$password."');";
@@ -27,7 +25,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			}
 			$_SESSION['level_user']=1;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
-			header("location:../backend/restaurant.php");
+			header("location:../backend/dashboard.php");
 			}else{
 			$_SESSION["message"]="Login Failed";
 			header("location:index.php");
@@ -44,7 +42,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			}
 			$_SESSION['level_user']=0;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
-			header("location:../frontend/dashboard.php");
+			header("location:../frontend/restaurant.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
 			header("location:index.php");

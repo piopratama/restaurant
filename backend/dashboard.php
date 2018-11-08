@@ -26,7 +26,7 @@
 				</div>
                 <div class="col-sm-3">
                     <ul class="nav navbar-nav navbar-right">
-                        <a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="logout.php">Logout</a></li>
+                        <a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="../logout.php">Logout</a></li>
                         
                     </ul>
                 </div>
