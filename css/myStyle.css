@@ -10,13 +10,25 @@ html, body {
     margin-top: 10px;
 }
 
-#food > .col-sm-3 > img {
+#food .myMenu img {
     margin-left: auto;
 	margin-right: auto;
 	display: block;
 }
 
-#beverage > .col-sm-3 img {
+#beverage .myMenu img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#foodOrder .myMenu img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#beverageOrder .myMenu img {
     margin-left: auto;
 	margin-right: auto;
 	display: block;
