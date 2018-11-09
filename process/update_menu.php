@@ -19,8 +19,12 @@ $id=$_POST['id'];
 $item=$_POST['item'];
 $price=$_POST['price'];
 $stock=$_POST['stock'];
+echo $id;
+echo $item;
+echo $price;
+echo $stock;
 
 
-mysqli_query($conn, "UPDATE tb_menu SET item='$item', price='$price', stock='$stock', WHERE id='$id'");
+mysqli_query($conn, "UPDATE tb_menu SET item='$item', price='$price', stock='$stock' WHERE id='$id'");
 header("location:../backend/menuRestaurant.php");
 ?>
