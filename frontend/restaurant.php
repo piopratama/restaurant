@@ -226,6 +226,19 @@
             $(".menuWrapperOrder").on('click', '.removeMenuOrder', function(){
                 $(this).parent().parent().parent().remove();
             });
+
+            $("#search_menu").change(function(){
+                var idMenu=$(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "../process/getMenuById.php",
+                    data: {id:idMenu},
+                    dataType: "text",
+                    success: function (response) {
+                        $("#foodOrder").append(response);
+                    }
+                });
+            })
         });
     </script>
 </body>
