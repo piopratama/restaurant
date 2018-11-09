@@ -114,11 +114,6 @@ $result = $conn->query($sql);
 											</td>
 										</tr>
 										<tr>
-<<<<<<< HEAD
-											<td>
-												<button type="submit" class="btn btn-success" id="add_item_btn" style="margin-top: 10px;" name=Submit>Update</button>
-											</td>	
-=======
 											<td>	
 												<div class="form-group">
 										      		<label for="usr">Image :</label>
@@ -128,7 +123,6 @@ $result = $conn->query($sql);
 										</tr>
 										<tr>
 											<td><button type="submit" class="btn btn-success" id="add_item_btn" style="margin-top: 10px;" name=Submit>Update</button></td>	
->>>>>>> 440ad314dc9c96111c2afedbd97e75a94b7f0b40
 										</tr>
 									</table>
 								</form>
