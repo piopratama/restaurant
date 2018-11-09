@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title><?php echo $title; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['url']; ?>assets/jquery.dataTables.min.css">
     <link rel="stylesheet" href="<?php echo $_SESSION['url']; ?>assets/bootstrap3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">

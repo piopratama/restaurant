@@ -24,7 +24,7 @@
     $data_menu = $conn->query($sql2);
 ?>
 <body>
-    <form method="POST" action="">
+    <!--<form method="POST" action="">-->
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-12">
@@ -113,6 +113,7 @@
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
                                                     <input type="hidden" value="1" class="form-control type">
+                                                    <input type="hidden" value="<?php echo $row['id']; ?>" class="form-control idItem">
                                                     <input type="number" value="1" class="form-control qty" placeholder="Qty">
                                                 </div>
                                                 <div class="mybtn-dropdown">
@@ -144,6 +145,7 @@
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
                                                     <input type="hidden" value="2" class="form-control type">
+                                                    <input type="hidden" value="<?php echo $row['id']; ?>" class="form-control idItem">
                                                     <input type="number" value="1" class="form-control qty" placeholder="Qty">
                                                 </div>
                                                 <div class="mybtn-dropdown">
@@ -185,8 +187,11 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <button type="button" id="submitBtn" class="btn btn-success center-block" data-dismiss="alert" aria-hidden="true">Submit</button>
+            </div>
         </div>
-    </form>
+    <!--</form>-->
 
     <?php include('../layout/footercasier.php'); ?>
     <script>
@@ -223,6 +228,12 @@
                 }
             });
 
+            $(".menuWrapperOrder").on('click', '.addMenuOrder', function(){
+                var s=$(this).parent().parent().parent().find('.title-menu').text();
+                s = s.substring(0, s.indexOf('('))+"("+$(this).parent().prev().find('.qty').val()+")";
+                $(this).parent().parent().parent().find('.title-menu').html(s);
+            });
+
             $(".menuWrapperOrder").on('click', '.removeMenuOrder', function(){
                 $(this).parent().parent().parent().remove();
             });
@@ -238,7 +249,18 @@
                         $("#foodOrder").append(response);
                     }
                 });
-            })
+            });
+
+            $("#submitBtn").click(function(){
+                var data = new Array();
+
+                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    var dataObject={id:$(this).val(),type: $(this).prev().val(), qty: $(this).next().val()};
+                    data.push(dataObject);
+                });
+
+                console.log(data);
+            });
         });
     </script>
 </body>
