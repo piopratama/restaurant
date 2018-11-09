@@ -14,13 +14,16 @@ else
     }
 }
 
-include '../koneksi.php';
+
+
 $id=$_POST['id'];
 $item=$_POST['item'];
 $price=$_POST['price'];
 $stock=$_POST['stock'];
+$kategori=$_POST['category'];
 
+include('../koneksi.php');
+mysqli_query($conn, "UPDATE tb_menu SET item='$item', price='$price', kategori='$kategori' stock='$stock', WHERE id='$id'");
 
-mysqli_query($conn, "UPDATE tb_menu SET item='$item', price='$price', stock='$stock', WHERE id='$id'");
 header("location:../backend/menuRestaurant.php");
 ?>

@@ -20,7 +20,7 @@ else
 }
 
 include('../layout/headercasier.php');
-include "../koneksi.php";
+include('../koneksi.php');
 $id=$_GET['id'];
 $data = mysqli_query($conn, "SELECT id, price, item, stock, kategori FROM tb_menu WHERE id=$id");
 $sql = "SELECT * FROM tb_kategori";
@@ -64,7 +64,7 @@ $result = $conn->query($sql);
 								while($d=mysqli_fetch_array($data)) 
 								{
 								?>
-								<form action="update_menu.php" method="POST" role="form" id="directPay_div">
+								<form action="update_menu.php" method="POST" role="form" >
 									<table>
 										<tr>
 											<td>
@@ -114,7 +114,9 @@ $result = $conn->query($sql);
 											</td>
 										</tr>
 										<tr>
-											<td><button type="submit" class="btn btn-success" id="add_item_btn" style="margin-top: 10px;" name=Submit>Update</button></td>	
+											<td>
+												<button type="submit" class="btn btn-success" id="add_item_btn" style="margin-top: 10px;" name=Submit>Update</button>
+											</td>	
 										</tr>
 									</table>
 								</form>
