@@ -78,7 +78,7 @@
 									<tr>
 										
 										<td><label>Kategori</label>
-											<select name="type" style="width: 200%; margin-bottom: 10px;" class="form-control" >
+											<select name="category" style="width: 200%; margin-bottom: 10px;" class="form-control" >
 											<option value="">-- Select Category --</option>
 													<?php
 														if ($result->num_rows > 0) {

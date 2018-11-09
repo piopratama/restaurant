@@ -37,7 +37,7 @@
 								<!-- Collect the nav links, forms, and other content for toggling -->
 								<div class="collapse navbar-collapse navbar-ex1-collapse">		
 									<ul class="nav navbar-nav navbar-right">
-										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="logout.php">Logout</a></li>
+										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="../logout.php">Logout</a></li>
 										<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
 									</ul>
 								</div><!-- /.navbar-collapse -->
@@ -93,7 +93,7 @@
 			<div class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<a href="kategori.php"><button type="button" class="btn btn-default buttonMenu">Category</button></a>
+					<a href="../backend/kategori.php"><button type="button" class="btn btn-default buttonMenu">Category</button></a>
 				</div>
 				<div class="col-md-4"></div>
 			</div>
