@@ -17,7 +17,7 @@
     include('../layout/headercasier.php');
     include '../koneksi.php';
     $id=$_GET['id'];
-    $expenses = mysqli_query($conn, "SELECT * FROM tb_expenses WHERE id='$id'");
+    $expenses = mysqli_query($conn, "SELECT * FROM tb_expenses");
     $employee = mysqli_query($conn, "SELECT tb_employee.id, tb_employee.nama FROM tb_employee");
 ?>
 
