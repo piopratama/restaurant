@@ -26,8 +26,8 @@ html, body {
     margin: 20px auto;
 }
 
-#deleteIcon{
-
+.backIcon{
+    margin-right: 10px;
 }
 
 .menuControl{

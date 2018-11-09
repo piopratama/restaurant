@@ -16,13 +16,12 @@
     $title="Dashboard";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
-	$menu = mysqli_query($conn, "SELECT  FROM tb_menu INNER JOIN tb_kategori ON ");
+	$menu = mysqli_query($conn, "SELECT tb_menu.*, tb_kategori.kategori FROM tb_menu INNER JOIN tb_kategori on tb_menu.kategori=tb_kategori.id;");
 ?>
 
 	<body>
 		<form action="transactionUnDirect.php" method="POST" accept-charset="utf-8">
-			<div class="container-fluid" style="margin-right: -15px; margin-left: -15px;">
-
+			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12 header">
 						<nav class="navbar navbar-default" role="navigation">
@@ -39,25 +38,10 @@
 								</div>
 						
 								<!-- Collect the nav links, forms, and other content for toggling -->
-								<div class="collapse navbar-collapse navbar-ex1-collapse">
-									<!-- <ul class="nav navbar-nav">
-										<li class="active"><a href="#">Link</a></li>
-										<li><a href="#">Link</a></li>
-									</ul> -->
-									
+								<div class="collapse navbar-collapse navbar-ex1-collapse">		
 									<ul class="nav navbar-nav navbar-right">
 										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="logout.php">Logout</a></li>
 										<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
-										
-										<!-- <li class="">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-											<ul class="dropdown-menu">
-												<li><a href="#">Action</a></li>
-												<li><a href="#">Another action</a></li>
-												<li><a href="#">Something else here</a></li>
-												<li><a href="#">Separated link</a></li>
-											</ul>
-										</li> -->
 									</ul>
 								</div><!-- /.navbar-collapse -->
 							</div>
@@ -72,8 +56,8 @@
 						<div class="row">						
 							<table id="example" class="table table-bordered" style="width: 100%">
 								<h1>Menu</h1>
-							<a type="button" class="btn btn-primary glyphicon glyphicon-plus" href="add_Menu.php" style="margin-bottom:10px"></a>
-							<a type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" href="administrator.php" style="margin-bottom:10px; margin-left: 5px;"></a>
+								<a type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" href="dashboard.php" style="margin-bottom:10px; margin-right: 5px;"></a>
+								<a type="button" class="btn btn-primary glyphicon glyphicon-plus" href="../process/add_Menu.php" style="margin-bottom:10px"></a>
 								<thead>
 									<tr>
 										<th>ID</th>
@@ -82,6 +66,7 @@
 										<th>Category</th>
 										<th>Stock</th>
 										<th>Image</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -95,99 +80,24 @@
 										<td><?php echo $data["kategori"];?></td>
 										<td><?php echo $data["stock"];?></td>
 										
-										<td><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $data['image'] ).'" height="100" widht="100"/>';?></td>
+										<td><img src="../assets/img/<?php echo $data['id'] ?>.jpg" alt="<?php echo $data['item']; ?>" width="100" height="73"></td>
 			
-										<td><a type="button" class="btn btn-danger" href="delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
-											<a type="button" class="btn btn-success" href="edit_menu.php?id=<?php echo $data['id']?>">Update</a>
+										<td><a type="button" class="btn btn-danger" href="../process/delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
+											<a type="button" class="btn btn-success" href="../process/edit_menu.php?id=<?php echo $data['id']?>">Update</a>
 										</td>
 									</tr>
 									<?php $no++;}?>
-									
 								</tbody>
 							</table>
 						</div>
 					</div>
 			</div>
 		</form>
-
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
+			<?php include('../layout/footercasier.php'); ?>
 		<script>
-			$(document).ready(function() {
+			$(document).ready(function () {
 				$("#example").DataTable();
-				var html=$("#parent_item_container").html();
-				$("#add_item_btn").click(function(event) {
-					$("#parent_item_container").append(html);
-				});
-				$("#parent_item_container").on('click','.glyphicon-trash',function(event){
-					$(this).parent().remove();
-					$('.total').each(function(i, obj) {
-						if(isNaN($(this).val())==false && $(this).val()!="")
-						{
-							total=total+parseFloat($(this).val());
-							total=total+0.1*total;
-							$("#grandTotal").val(total);
-							var payment=parseFloat($("#deposit").val());
-							if(isNaN(payment)==false)
-							{
-								var change=payment-total;
-								$("#change").val(change);
-							}
-						}
-					});
-				});
-				$("#parent_item_container").on('change','.myItem',function(event) {
-					var id=$(this).val();
-					var price_field=$(this).parent().next().next().find(".price");
-					$.ajax({
-							url: 'checkItemPrice.php',
-							type: 'post',
-							data: {id_item:id},
-							success: function (data) {
-								//alert(data);
-								price_field.val(data);
-							}
-						});
-				});
-				$("#parent_item_container").on('keyup','.qtyItem',function(event) {
-					var qty=$(this).val();
-					var price_field=$(this).parent().next().find(".price");
-					var total=qty*price_field.val();
-					var price_total=$(this).parent().next().next().find('.total');
-					price_total.val(total);
-					var total=0;
-					$('.total').each(function(i, obj) {
-						if(isNaN($(this).val())==false && $(this).val()!="")
-						{
-							total=total+parseFloat($(this).val());
-							total=total+0.1*total;
-							$("#grandTotal").val(total);
-							var payment=parseFloat($("#deposit").val());
-							/*if(isNaN(payment)==false)
-							{
-								var change=payment-total;
-								$("#change").val(change);
-							}*/
-						}
-					});
-				});
-				$("#payment").keyup(function(event) {
-					var grandTotal=parseFloat($("#grandTotal").val());
-					var deposit=parseFloat($(this).val());
-					/*if(isNaN(payment)==false)
-					{
-						var change=payment-grandTotal;
-						$("#change").val(change);
-					}
-					else
-					{
-						$("#change").val("");
-					}*/
-				});
 			});
 		</script>
 	</body>
-</html>
+</html>									

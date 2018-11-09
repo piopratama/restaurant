@@ -1,15 +1,27 @@
 <?php
-session_start();
-if(empty($_SESSION['username'])){
-	header("location:index.php");
-}
+	 session_start();
+	 if(empty($_SESSION['username'])){
+		 header("location:..");
+	 }
+	 else
+	 {
+		 if(!empty($_SESSION['level_user']))
+		 {
+			 if($_SESSION["level_user"]==0)
+			 {
+				 header("location:../index.php");
+			 }
+		 }
+	 }
+
+	include('../layout/headercasier.php');
+	require('../koneksi.php');
+	$sql = "SELECT * FROM tb_kategori";
+	$result = $conn->query($sql);
 ?>
-	<?php include('../layout/headercasier.php'); ?>
 	<link rel="stylesheet" type="text/css" href="./css/directPayStyle.css">
 	<body>
-		
-		<div class="container-fluid" style="margin-right: -15px; margin-left: -15px;">
-
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12 header">
 					<nav class="navbar navbar-default" role="navigation">
@@ -22,29 +34,12 @@ if(empty($_SESSION['username'])){
 									<span class="icon-bar"></span>
 									<span class="icon-bar"></span>
 								</button>
-								<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Shop</a>
+								<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Restaurant</a>
 							</div>
-					
-							<!-- Collect the nav links, forms, and other content for toggling -->
 							<div class="collapse navbar-collapse navbar-ex1-collapse">
-								<!-- <ul class="nav navbar-nav">
-									<li class="active"><a href="#">Link</a></li>
-									<li><a href="#">Link</a></li>
-								</ul> -->
-								
 								<ul class="nav navbar-nav navbar-right">
 									<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px; color: white" href="logout.php">Logout</a></li>
 									<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
-									
-									<!-- <li class="">
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-										<ul class="dropdown-menu">
-											<li><a href="#">Action</a></li>
-											<li><a href="#">Another action</a></li>
-											<li><a href="#">Something else here</a></li>
-											<li><a href="#">Separated link</a></li>
-										</ul>
-									</li> -->
 								</ul>
 							</div><!-- /.navbar-collapse -->
 						</div>
@@ -52,18 +47,16 @@ if(empty($_SESSION['username'])){
 				</div>
 			</div>
 		</div>
-
 		<div class="container">
 			<div class="row">
-				
 				<div class="col-md-4 sidebar">
-					<a type="button" href="user.php" class="btn btn-danger glyphicon glyphicon-arrow-left"></a>
+					<a type="button" href="../backend/dashboard.php" class="btn btn-danger glyphicon glyphicon-arrow-left"></a>
 				</div>
 				
 				<div class="col-md-8 articles">
 					<div class="row">
 						<div class="col-md-12" style="margin: 10px 0px">
-							<form action="addMenu.php" method="POST" role="form" id="directPay_div" enctype="multipart/form-data">
+							<form action="add_menu_process.php" method="POST" role="form" enctype="multipart/form-data">
 								<table>				
 									<tr>
 										<td>	
@@ -84,10 +77,20 @@ if(empty($_SESSION['username'])){
 									</tr>
 									<tr>
 										
-										<td><label>Type</label>
+										<td><label>Kategori</label>
 											<select name="type" style="width: 200%; margin-bottom: 10px;" class="form-control" >
-												<option value="Admin">Food</option>
-												<option value="Casier">Drink</option>
+											<option value="">-- Select Category --</option>
+													<?php
+														if ($result->num_rows > 0) {
+														// output data of each row
+														while($row = $result->fetch_assoc()) {
+														?>
+													<option value="<?php echo $row['id']?>"><?php echo $row['kategori'];?></option>
+													<?php
+														}
+													}
+														$conn->close();
+													?>
 											</select> 
 										</td>
 									</tr>
@@ -101,7 +104,6 @@ if(empty($_SESSION['username'])){
 										</td>
 									</tr>
 									<tr>
-										
 										<td>	
 											<div class="form-group">
 												<label for="usr">Images</label>
@@ -109,7 +111,6 @@ if(empty($_SESSION['username'])){
 											</div>
 										</td>
 									</tr>
-
 									<tr>
 										<td><button type="submit" class="btn btn-success" id="add_item_btn" name=Submit>Submit</button></td>
 									</tr>
