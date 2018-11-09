@@ -10,13 +10,25 @@ html, body {
     margin-top: 10px;
 }
 
-#food > .col-sm-3 > img {
+#food .myMenu img {
     margin-left: auto;
 	margin-right: auto;
 	display: block;
 }
 
-#beverage > .col-sm-3 img {
+#beverage .myMenu img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#foodOrder .myMenu img {
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#beverageOrder .myMenu img {
     margin-left: auto;
 	margin-right: auto;
 	display: block;
@@ -24,10 +36,6 @@ html, body {
 
 #order > .col-sm-12 {
     margin: 20px auto;
-}
-
-.backIcon{
-    margin-right: 10px;
 }
 
 .menuControl{
@@ -66,4 +74,8 @@ html, body {
 
 .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
 	color: #000000 !important;
+}
+
+.dropdown-menu-myStyle {
+    padding: 10px;
 }

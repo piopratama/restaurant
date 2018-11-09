@@ -95,7 +95,7 @@
                             
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="food">
+                            <div role="tabpanel" class="tab-pane active menuWrapper" id="food">
                                 <h3 class="text-center">Food</h3>
                                 <?php
                                 mysqli_data_seek($data_menu, 0);
@@ -104,17 +104,29 @@
                                     if($row['kategori']==1)
                                     {
                                 ?>
-                                    <div class="col-sm-3">
-                                        <p class="text-center"><?php echo $row['item'] ?></p>
-                                        <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73">
-                                        <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                    <div class="dropdown">
+                                        <div class="col-sm-3 myMenu">
+                                            <p class="text-center title-menu"><?php echo $row['item'] ?></p>
+                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                            <div class="dropdown-menu dropdown-menu-myStyle">
+                                                <div class="form-group">
+                                                    <label for="">Qty</label>
+                                                    <input type="hidden" value="1" class="form-control type">
+                                                    <input type="number" value="1" class="form-control qty" placeholder="Qty">
+                                                </div>
+                                                <div class="mybtn-dropdown">
+                                                    <button type="button" class="btn btn-primary pull-right addMenuOrder">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 <?php
                                     }
                                 }
                                 ?>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="beverage">
+                            <div role="tabpanel" class="tab-pane menuWrapper" id="beverage">
                                 <h3 class="text-center">Beverage</h3>
                                 <?php
                                 mysqli_data_seek($data_menu, 0);
@@ -123,10 +135,22 @@
                                     if($row['kategori']==2)
                                     {
                                 ?>
-                                    <div class="col-sm-3">
-                                        <p class="text-center"><?php echo $row['item'] ?></p>
-                                        <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73">
-                                        <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                    <div class="dropdown">
+                                        <div class="col-sm-3 myMenu">
+                                            <p class="text-center title-menu"><?php echo $row['item'] ?></p>
+                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                            <div class="dropdown-menu dropdown-menu-myStyle">
+                                                <div class="form-group">
+                                                    <label for="">Qty</label>
+                                                    <input type="hidden" value="2" class="form-control type">
+                                                    <input type="number" value="1" class="form-control qty" placeholder="Qty">
+                                                </div>
+                                                <div class="mybtn-dropdown">
+                                                    <button type="button" class="btn btn-primary pull-right addMenuOrder">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 <?php
                                     }
@@ -136,17 +160,72 @@
                         </div>
                     </div>  
                 </div>
-                <div class="col-sm-6">
-                    <h2 class="text-center">Order</h2>
+                <div class="col-sm-6" id="ordered">
+                    <h2 class="text-center">Ordered</h2>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#foodOrder" aria-controls="foodOrder" role="tab" data-toggle="tab">Food</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#beverageOrder" aria-controls="beverageOrder" role="tab" data-toggle="tab">Beverage</a>
+                            </li>
+                        </ul>
+                            
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active menuWrapperOrder" id="foodOrder">
+                                <h3 class="text-center">Food</h3>
+                            </div>
+                            <div role="tabpanel" class="tab-pane menuWrapperOrder" id="beverageOrder">
+                                <h3 class="text-center">Beverage</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
+
     <?php include('../layout/footercasier.php'); ?>
     <script>
         $(document).ready(function () {
             $("#customer_table").select2();
             $("#search_menu").select2();
+
+            $(".menuWrapper").on('click', '.addMenuOrder', function(){
+                var qty=$(this).parent().prev().find('.qty').val();
+                var type=$(this).parent().prev().find('.type').val();
+
+                if(parseFloat(qty)>0)
+                {
+                    if(parseInt(type)==1)
+                    {
+                        $("#foodOrder").append($(this).parent().parent().parent().parent().html());
+                        
+                        $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+                        
+                        $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+
+                        $("#foodOrder .qty:last").val(qty);
+                    }
+                    else if(parseInt(type)==2)
+                    {
+                        $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
+                        
+                        $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+
+                        $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+
+                        $("#beverageOrder .qty:last").val(qty);
+                    }
+                }
+            });
+
+            $(".menuWrapperOrder").on('click', '.removeMenuOrder', function(){
+                $(this).parent().parent().parent().remove();
+            });
         });
     </script>
 </body>
