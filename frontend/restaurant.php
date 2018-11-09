@@ -205,8 +205,10 @@
                         $("#foodOrder").append($(this).parent().parent().parent().parent().html());
                         
                         $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+                        
+                        $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
-                        $("#foodOrder .title-menu").html($("#food").find('.title-menu').html()+" ("+qty+") ");
+                        $("#foodOrder .qty:last").val(qty);
                     }
                     else if(parseInt(type)==2)
                     {
@@ -214,7 +216,9 @@
                         
                         $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
 
-                        $("#beverageOrder .title-menu").html($("#beverage").find('.title-menu').html()+" ("+qty+") ");
+                        $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+
+                        $("#beverageOrder .qty:last").val(qty);
                     }
                 }
             });
