@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Edit User";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
     $id=$_GET['id'];

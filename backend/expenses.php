@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Expenses";
     include('../layout/headercasier.php');
     require('../koneksi.php');
     $expenses = mysqli_query($conn, "SELECT tb_expenses.*, tb_employee.nama as buyer FROM tb_expenses LEFT JOIN tb_employee on tb_expenses.buyer=tb_employee.id;");

@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Category";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
     $category = mysqli_query($conn, "SELECT * FROM tb_kategori;");

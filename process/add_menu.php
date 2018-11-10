@@ -13,13 +13,12 @@
 			 }
 		 }
 	 }
-
+	 $title="Add Menu";
 	include('../layout/headercasier.php');
 	require('../koneksi.php');
 	$sql = "SELECT * FROM tb_kategori";
 	$result = $conn->query($sql);
-?>
-	<link rel="stylesheet" type="text/css" href="./css/directPayStyle.css">
+?>	
 	<body>
 		<div class="container-fluid">
 			<div class="row">

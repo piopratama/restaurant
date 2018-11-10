@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Add User";
     include('../layout/headercasier.php');
 ?>
 <body>

@@ -18,5 +18,5 @@
 	$result = mysqli_query($conn, "INSERT INTO tb_menu(item,price,kategori,stock,img_path) VALUES('$item',$price,$kategori,$stock,'$image_name')");
 	
 									
-	header("location:../backend/add_menu.php");
+	header("location:../backend/menuRestaurant.php");
 ?>

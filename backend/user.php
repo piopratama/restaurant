@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="User";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
     $barang = mysqli_query($conn, "SELECT * FROM tb_barang;");

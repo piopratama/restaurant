@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Menu";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
 	$menu = mysqli_query($conn, "SELECT tb_menu.*, tb_kategori.kategori FROM tb_menu INNER JOIN tb_kategori on tb_menu.kategori=tb_kategori.id;");

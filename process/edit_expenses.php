@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Edit Expenses";
     include('../layout/headercasier.php');
     include '../koneksi.php';
     $id=$_GET['id'];

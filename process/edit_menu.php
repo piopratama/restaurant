@@ -18,7 +18,7 @@ else
 		}
 	}
 }
-
+$title="Edit Menu";
 include('../layout/headercasier.php');
 include('../koneksi.php');
 $id=$_GET['id'];
@@ -115,9 +115,9 @@ $result = $conn->query($sql);
 										</tr>
 										<tr>
 											<td>	
-												<div class="form-group">
+												<div class="form-group"> 
 										      		<label for="usr">Image :</label>
-										      		<input type="file" style="width: 200%;" class="form-control" name="image" id="usr" value="<?php echo $d['stock'];?>">
+										      		<input type="file" style="height:100%; width: 200%;" class="form-control" name="image" id="usr">
 										    	</div>
 											</td>
 										</tr>
