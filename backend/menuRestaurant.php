@@ -82,7 +82,7 @@
 										
 										<td><img src="../assets/img/<?php echo $data['img_path'] ?>" alt="<?php echo $data['item']; ?>" width="100" height="73"></td>
 			
-										<td><a type="button" class="btn btn-danger"    onclick="return confirm('Are you sure?')" href="../process/delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
+										<td><a type="button" class="btn btn-danger"    onclick="return confirm('Are you sure?')" onclick="return confirm('Are you sure?')" href="../process/delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
 											<a type="button" class="btn btn-success" href="../process/edit_menu.php?id=<?php echo $data['id']?>">Update</a>
 										</td>
 									</tr>

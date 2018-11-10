@@ -86,8 +86,8 @@
                                 <td><?php echo $data["total"];?></td>
                                 <td><?php echo $data["description"];?></td>
                                 <td>
-                                    <button class="btn btn-danger deleteExpense" id="<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-trash"></span></button>
-                                    <a type="button" class="btn btn-success" href="../process/edit_expenses.php?id=<?php echo $data['3']?>"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    <a type="button" class="btn btn-danger deleteExpense" onclick="return confirm('Are you sure?')" href="../process/delete_expenses.php?id=<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-trash"></span></a>
+                                    <a type="button" class="btn btn-success"  href="../process/edit_expenses.php?id=<?php echo $data['id'];?>"><span class="glyphicon glyphicon-pencil"></span></a>
                                 </td>
                             </tr>
                             <?php $no++;}?>					
