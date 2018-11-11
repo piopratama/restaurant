@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";s
+    $title="Dashboard";
     include('../layout/headercasier.php');
 
     require('../koneksi.php');
@@ -259,7 +259,15 @@
                     data.push(dataObject);
                 });
 
-                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: "../process/insertOrder.php",
+                    data: {data: JSON.stringify(data)},
+                    dataType: "text",
+                    success: function (response) {
+                        console.log(response);
+                    }
+                });
             });
         });
     </script>
