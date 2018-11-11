@@ -38,11 +38,13 @@ while($row=$data_menu->fetch_assoc())
     $html=$html."<div class='form-group'>";
     $html=$html."<label for=''>Qty</label>";
     $html=$html."<input type='hidden' value='".$row['kategori']."' class='form-control type'>";
+    $html=$html."<input type='hidden' value='".$row['price']."' class='form-control price'>";
     $html=$html."<input type='hidden' value='".$row['id']."' class='form-control idItem'>";
     $html=$html."<input type='number' value='1' class='form-control qty' placeholder='Qty'>";
     $html=$html."</div>";
     $html=$html."<div class='mybtn-dropdown'>";
     $html=$html."<button type='button' class='btn btn-primary pull-right addMenuOrder'>Update</button>";
+    $html=$html."<button type='button' class='btn btn-primary pull-right removeMenuOrder' style='margin-right:2px;'>Delete</button>";
     $html=$html."</div>";
     $html=$html."</div>";
     $html=$html."</div>";
