@@ -2,18 +2,21 @@
 	// Check If form submitted, insert form data into users table.
 	$item = $_POST['item'];
 	$price = $_POST['price'];
-	$type = $_POST['type'];
 	$stock = $_POST['stock'];
-	$image = addslashes(file_get_contents($_FILES['image']['tmp_name'])); //SQL Injection defence!
-	//$image_name = addslashes($_FILES['image']['name']);
-
+	$kategori=$_POST['category'];
+	$image_name = $_FILES['image']['name'];
+	$file_tmp=$_FILES['image']['tmp_name'];
+	move_uploaded_file($file_tmp,'../assets/img/'.$image_name);
+	//$image = addslashes(file_get_contents($_FILES['image']['tmp_name'])); //SQL Injection defence!
 	
 	
-	// include database connection file
-	include 'koneksi.php';
+	
+	//include database connection file
+	require '../koneksi.php';
 											
 	// // Insert user data into table
-	$result = mysqli_query($conn, "INSERT INTO tb_menu(item,price,kategori,stock,image) VALUES('$item','$price','$kategori','$stock','$img_path')");
+	$result = mysqli_query($conn, "INSERT INTO tb_menu(item,price,kategori,stock,img_path) VALUES('$item',$price,$kategori,$stock,'$image_name')");
+	
 									
 	header("location:../backend/menuRestaurant.php");
 ?>

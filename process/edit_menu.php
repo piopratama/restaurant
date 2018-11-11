@@ -18,9 +18,9 @@ else
 		}
 	}
 }
-
+$title="Edit Menu";
 include('../layout/headercasier.php');
-include "../koneksi.php";
+include('../koneksi.php');
 $id=$_GET['id'];
 $data = mysqli_query($conn, "SELECT id, price, item, stock, kategori FROM tb_menu WHERE id=$id");
 $sql = "SELECT * FROM tb_kategori";
@@ -64,7 +64,7 @@ $result = $conn->query($sql);
 								while($d=mysqli_fetch_array($data)) 
 								{
 								?>
-								<form action="update_menu.php" method="POST" role="form" id="directPay_div">
+								<form action="update_menu.php" method="POST" role="form" >
 									<table>
 										<tr>
 											<td>
@@ -115,9 +115,9 @@ $result = $conn->query($sql);
 										</tr>
 										<tr>
 											<td>	
-												<div class="form-group">
+												<div class="form-group"> 
 										      		<label for="usr">Image :</label>
-										      		<input type="file" style="width: 200%;" class="form-control" name="image" id="usr" value="<?php echo $d['stock'];?>">
+										      		<input type="file" style="height:100%; width: 200%;" class="form-control" name="image" id="usr">
 										    	</div>
 											</td>
 										</tr>

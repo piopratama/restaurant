@@ -5,6 +5,6 @@ $a=$_SESSION['username'];
 
 $sql = mysqli_query($conn, "update tb_employee set online_status='0' where username='$a'");
 session_destroy();
-header("location:.");
+header("location:index.php");
 
 ?>

@@ -13,10 +13,11 @@
             }
         }
     }
-    $title="Menu";
+    $title="User";
     include('../layout/headercasier.php');
 	require('../koneksi.php');
-	$menu = mysqli_query($conn, "SELECT tb_menu.*, tb_kategori.kategori FROM tb_menu INNER JOIN tb_kategori on tb_menu.kategori=tb_kategori.id;");
+    $barang = mysqli_query($conn, "SELECT * FROM tb_barang;");
+    $user = mysqli_query($conn, "SELECT id, nama, address, sallary, tlp, username, password FROM tb_employee");
 ?>
 
 	<body>
@@ -54,41 +55,44 @@
 				<div class="row">
 					<div class="col-md-12 articles">
 						<div class="row">						
-							<table id="example" class="table table-bordered" style="width: 100%">
-								<h1>Menu</h1>
-								<a type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" href="dashboard.php" style="margin-bottom:10px; margin-right: 5px;"></a>
-								<a type="button" class="btn btn-primary glyphicon glyphicon-plus" href="../process/add_Menu.php" style="margin-bottom:10px"></a>
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Item</th>
-										<th>Price</th>
-										<th>Category</th>
-										<th>Stock</th>
-										<th>Image</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php 
-										$no=1;
-										foreach($menu as $data) {?>
-									<tr>
-										<td><?php echo $no;?></td>
-										<td><?php echo $data["item"];?></td>
-										<td><?php echo $data["price"];?></td>
-										<td><?php echo $data["kategori"];?></td>
-										<td><?php echo $data["stock"];?></td>
-										
-										<td><img src="../assets/img/<?php echo $data['img_path'] ?>" alt="<?php echo $data['item']; ?>" width="100" height="73"></td>
-			
-										<td><a type="button" class="btn btn-danger"    onclick="return confirm('Are you sure?')" onclick="return confirm('Are you sure?')" href="../process/delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
-											<a type="button" class="btn btn-success" href="../process/edit_menu.php?id=<?php echo $data['id']?>">Update</a>
-										</td>
-									</tr>
-									<?php $no++;}?>
-								</tbody>
-							</table>
+                        <table id="example" class="table table-bordered" style="width: 100%">
+							<h1>USER</h1>
+						
+						<a type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" href="../backend/dashboard.php" style="margin:0 5px 10px 0"></a>
+						<a type="button" class="btn btn-primary glyphicon glyphicon-plus" href="../process/add_user.php" style="margin: 0 0 10px 0"></a>
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Address</th>
+									<th>Sallary</th>
+									<th>tlpn</th>
+									<th>Username</th>
+									<th>Password</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php 
+									$no=1;
+									foreach($user as $data) {?>
+								<tr>
+									<td><?php echo $no;?></td>
+									<td><?php echo $data["nama"];?></td>
+									<td><?php echo $data["address"];?></td>
+									<td><?php echo $data["sallary"];?></td>
+									<td><?php echo $data["tlp"];?></td>
+									<td><?php echo $data["username"];?></td>
+									<td><?php echo $data["password"];?></td>
+									<td>
+										<a type="button" class="btn btn-danger" onclick="return confirm('Are you sure?')" href="../process/delete_user.php?id=<?php echo $data['id']?>">Delete</a>
+										<a type="button" class="btn btn-success" href="../process/edit_user.php?id=<?php echo $data['id']?>"><span class="glyphicon glyphicon-pencil"></span></a>
+									</td>
+								</tr>
+								<?php $no++;}?>
+								
+							</tbody>
+						</table>
 						</div>
 					</div>
 			</div>

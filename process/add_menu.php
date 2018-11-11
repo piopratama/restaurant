@@ -13,13 +13,12 @@
 			 }
 		 }
 	 }
-
+	 $title="Add Menu";
 	include('../layout/headercasier.php');
 	require('../koneksi.php');
 	$sql = "SELECT * FROM tb_kategori";
 	$result = $conn->query($sql);
-?>
-	<link rel="stylesheet" type="text/css" href="./css/directPayStyle.css">
+?>	
 	<body>
 		<div class="container-fluid">
 			<div class="row">
@@ -78,7 +77,7 @@
 									<tr>
 										
 										<td><label>Kategori</label>
-											<select name="type" style="width: 200%; margin-bottom: 10px;" class="form-control" >
+											<select name="category" style="width: 200%; margin-bottom: 10px;" class="form-control" >
 											<option value="">-- Select Category --</option>
 													<?php
 														if ($result->num_rows > 0) {

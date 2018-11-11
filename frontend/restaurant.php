@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Dashboard";
+    $title="Order";
     include('../layout/headercasier.php');
 
     require('../koneksi.php');
