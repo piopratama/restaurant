@@ -65,7 +65,7 @@
                             while($row=$data_menu->fetch_assoc())
                             {
                             ?>
-                                <option value="<?php echo $row['id']; ?>"><?php echo $row['item']; ?></option>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['item'].($row['kategori']==1 ? " (food)":" (beverage)"); ?></option>
                             <?php
                             }
                             ?>
@@ -113,6 +113,7 @@
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
                                                     <input type="hidden" value="1" class="form-control type">
+                                                    <input type="hidden" value="<?php echo $row['price']; ?>" class="form-control price">
                                                     <input type="hidden" value="<?php echo $row['id']; ?>" class="form-control idItem">
                                                     <input type="number" value="1" class="form-control qty" placeholder="Qty">
                                                 </div>
@@ -145,6 +146,7 @@
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
                                                     <input type="hidden" value="2" class="form-control type">
+                                                    <input type="hidden" value="<?php echo $row['price']; ?>" class="form-control price">
                                                     <input type="hidden" value="<?php echo $row['id']; ?>" class="form-control idItem">
                                                     <input type="number" value="1" class="form-control qty" placeholder="Qty">
                                                 </div>
@@ -188,21 +190,99 @@
                 </div>
             </div>
             <div class="row">
-                <button type="button" id="submitBtn" class="btn btn-success center-block" data-dismiss="alert" aria-hidden="true">Submit</button>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Total</label>
+                        <input type="number" class="form-control" id="total" placeholder="Total" readonly="readonly">
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <!--<div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Payment</label>
+                        <input type="number" class="form-control" id="payment" placeholder="Payment">
+                    </div>                    
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Change</label>
+                        <input type="number" class="form-control" id="change" placeholder="Change" readonly="readonly">
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Method</label>
+                        <select name="method" id="method" class="form-control" required="required">
+                            <option value="">-- Select Method --</option>
+                            <option value="cash">Cash</option>
+                            <option value="transfer">Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" id="submitBtn" class="btn btn-success center-block" data-dismiss="alert" aria-hidden="true">Submit</button>
+                    </div>
+                </div>
             </div>
         </div>
     <!--</form>-->
+    
+    <div class="modal fade" id="exampleModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="message">Insert Successfully</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
+    <?php 
+        $session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
+        unset($_SESSION['message']);
+    ?>
     <?php include('../layout/footercasier.php'); ?>
     <script>
         $(document).ready(function () {
+            var total=0;
             $("#customer_table").select2();
             $("#search_menu").select2();
+            
+            /*var message='<?php echo $session_value;?>';
+            if(message!="")
+            {
+                $("#exampleModal2").modal('show');
+            }*/
 
             $(".menuWrapper").on('click', '.addMenuOrder', function(){
                 var qty=$(this).parent().prev().find('.qty').val();
                 var type=$(this).parent().prev().find('.type').val();
-
+                var price=$(this).parent().prev().find('.price').val();
+                
                 if(parseFloat(qty)>0)
                 {
                     if(parseInt(type)==1)
@@ -225,8 +305,19 @@
 
                         $("#beverageOrder .qty:last").val(qty);
                     }
+
+                    total=total+qty*parseFloat(price);
+                    $("#total").val(total);
                 }
             });
+            
+            /*$("#payment").keyup(function(){
+                var totalVal=$("#total").val();
+                if(totalVal!="" && $(this).val()!="")
+                {
+                    $("#change").val(totalVal-parseFloat($(this).val()));
+                }
+            });*/
 
             $(".menuWrapperOrder").on('click', '.addMenuOrder', function(){
                 var s=$(this).parent().parent().parent().find('.title-menu').text();
@@ -236,17 +327,37 @@
 
             $(".menuWrapperOrder").on('click', '.removeMenuOrder', function(){
                 $(this).parent().parent().parent().remove();
+                var rmPrice=$(this).parent().prev().find('.price').val();
+                var rmQty=$(this).parent().prev().find('.qty').val();
+
+                total=total-rmQty*parseFloat(rmPrice);
+                $("#total").val(total);
             });
 
             $("#search_menu").change(function(){
                 var idMenu=$(this).val();
+                var textMenu=$(this).find('option:selected').text();
+                
                 $.ajax({
                     type: "POST",
                     url: "../process/getMenuById.php",
                     data: {id:idMenu},
                     dataType: "text",
                     success: function (response) {
-                        $("#foodOrder").append(response);
+                        if(textMenu.indexOf('food')!=-1)
+                        {
+                            $("#foodOrder").append(response);
+                        }
+                        else
+                        {
+                            $("#beverageOrder").append(response);
+                        }
+
+                        total=0;
+                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                            total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                        });
+                        $("#total").val(total);
                     }
                 });
             });
@@ -255,11 +366,25 @@
                 var data = new Array();
 
                 $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                    var dataObject={id:$(this).val(),type: $(this).prev().val(), qty: $(this).next().val()};
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
                     data.push(dataObject);
                 });
 
-                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: "../process/insertOrder.php",
+                    data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
+                    dataType: "text",
+                    success: function (response) {
+                        console.log(response);
+                        $("#message").html("Insert Successfully");
+                        $("#exampleModal2").modal('show');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $("#message").html("Insert Unsuccessfully");
+                        $("#exampleModal2").modal('show');
+                    }
+                });
             });
         });
     </script>
