@@ -17,9 +17,8 @@
     include('../layout/headercasier.php');
     require('../koneksi.php');
 
-    //$barang = mysqli_query($conn, "SELECT customer, date, (SELECT nama FROM tb_employee WHERE id=id_employee) AS id_employee, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, status FROM tb_transaksi WHERE statuss='0';");
-    $barang = mysqli_query($conn, "SELECT * tb_transaksi;" );
-    $user = mysqli_query($conn, "SELECT * FROM tb_employee");
+    $transaksi = mysqli_query($conn, "SELECT customer, date, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama, (SELECT item FROM tb_menu WHERE id=id_menu ) AS item, qty, total_price, status FROM tb_transaksi;");
+    //$user = mysqli_query($conn, "SELECT * FROM tb_employee");
 ?>
 
     <body>
@@ -92,13 +91,13 @@
 						<tbody>
 							<?php 
 							$no=1;
-							foreach ($barang as $data) {?>
+                            foreach ($transaksi as $data) {?>
 							<tr>
 								<td><?php echo $no ?></td>
 								<td><?php echo $data["customer"];?></td>
 								<td><?php echo $data["date"];?></td>
-								<td><?php echo $data["id_employee"];?></td>
-								<td><?php echo $data["id_menu"];?></td>
+								<td><?php echo $data["nama"];?></td>
+								<td><?php echo $data["item"];?></td>
 								<td><?php echo $data["qty"];?></td>
 								<td><?php echo $data["total_price"];?></td>
 								<td><?php echo $data["status"];?></td>
