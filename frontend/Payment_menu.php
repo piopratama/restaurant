@@ -13,7 +13,7 @@
             }
         }
     }
-    $title="Order";
+    $title="Payment";
     include('../layout/headercasier.php');
 
     require('../koneksi.php');
@@ -198,6 +198,28 @@
                     </div>
                 </div>
             </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-12" id="ordereddHistory">
+                    <h2 class="text-center">Ordered History</h2>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#menuOrderHistory" aria-controls="menuOrderHistory" role="tab" data-toggle="tab">History</a>
+                            </li>
+                        </ul>
+                            
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active menuWrapperOrderHistory" id="menuOrderHistory">
+                                <h3 class="text-center"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
@@ -208,7 +230,7 @@
                 </div>
                 <div class="col-md-4"></div>
             </div>
-            <!--<div class="row">
+            <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -241,7 +263,7 @@
                     </div>
                 </div>
                 <div class="col-md-4"></div>
-            </div>-->
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -305,7 +327,7 @@
                         $("#foodOrder .qty:last").val(qty);
                     }
                     else if(parseInt(type)==2)
-                    { 
+                    {
                         $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
                         
                         $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
@@ -315,26 +337,38 @@
                         $("#beverageOrder .qty:last").val(qty);
                     }
 
-                    total=total+qty*parseFloat(price);
+                    total=0;
+                    $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                        total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                    });
+
+                    $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                        total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                    });
+
                     $("#total").val(total);
                 }
             });
             
-            /*$("#payment").keyup(function(){
+            $("#payment").keyup(function(){
                 var totalVal=$("#total").val();
                 if(totalVal!="" && $(this).val()!="")
                 {
-                    $("#change").val(totalVal-parseFloat($(this).val()));
+                    $("#change").val(parseFloat($(this).val())-totalVal);
                 }
-            });*/
+            });
 
             $(".menuWrapperOrder").on('click', '.addMenuOrder', function(){
                 var s=$(this).parent().parent().parent().find('.title-menu').text();
                 s = s.substring(0, s.indexOf('('))+"("+$(this).parent().prev().find('.qty').val()+")";
                 $(this).parent().parent().parent().find('.title-menu').html(s);
-                
+
                 total=0;
                 $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                });
+
+                $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                     total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                 });
 
@@ -345,9 +379,44 @@
                 $(this).parent().parent().parent().remove();
                 var rmPrice=$(this).parent().prev().find('.price').val();
                 var rmQty=$(this).parent().prev().find('.qty').val();
-                
+
                 total=total-rmQty*parseFloat(rmPrice);
                 $("#total").val(total);
+            });
+            
+            $("#customer_name").keyup(function (e) {
+                var idMenu=$("#search_menu").val();
+                var textMenu=$("#search_menu").find('option:selected').text();
+                if(idMenu!="")
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "../process/getMenuById.php",
+                        data: {id:idMenu},
+                        dataType: "text",
+                        success: function (response) {
+                            if(textMenu.indexOf('food')!=-1)
+                            {
+                                $("#foodOrder").append(response);
+                            }
+                            else
+                            {
+                                $("#beverageOrder").append(response);
+                            }
+
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                    });
+                }
             });
 
             $("#search_menu").change(function(){
@@ -373,49 +442,14 @@
                         $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
                             total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                         });
-                        $("#total").val(total);
-                    }
-                });
-            });
 
-            $("#customer_table").change(function(){
-                var idMeja=$(this).val();
-                
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaFood.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#foodOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                        $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                             total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                         });
 
                         $("#total").val(total);
                     }
                 });
-
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaBeverage.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#beverageOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                            total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
-                        });
-
-                        $("#total").val(total);
-                    }
-                });
-            });
-
-            $("#clearBtn").click(function(){
-                location.reload();
             });
 
             $("#submitBtn").click(function(){
@@ -426,22 +460,72 @@
                     data.push(dataObject);
                 });
 
-                $.ajax({
-                    type: "POST",
-                    url: "../process/insertOrder.php",
-                    data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
-                    dataType: "text",
-                    success: function (response) {
-                        console.log(response);
-                        $("#message").html("Insert Successfully");
-                        $("#exampleModal2").modal('show');
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        $("#message").html("Insert Unsuccessfully");
-                        $("#exampleModal2").modal('show');
-                    }
+                $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
+                    data.push(dataObject);
                 });
+                if($("#change").val()!="")
+                {
+                    if(parseFloat($("#change").val())>=0)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: "../process/payment.php",
+                            data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: $("paid"),method:$("#method").val()},
+                            dataType: "text",
+                            success: function (response) {
+                                $("#message").html("Insert Successfully");
+                                $("#exampleModal2").modal('show');
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $("#message").html("Insert Unsuccessfully");
+                                $("#exampleModal2").modal('show');
+                            }
+                        });
+                    }
+                }
             });
+            
+            $("#customer_table").change(function(){
+                search_payment();
+            });
+
+            $("#customer_name").keyup(function(){
+                search_payment();
+            });
+            
+            $("#clearBtn").click(function(){
+                location.reload();
+            });
+
+            function search_payment(){
+                var table = $("#customer_table").val();
+                var name = $("#customer_name").val();
+                if(table!="")
+                {
+                    $.ajax({
+                        type:'POST',
+                        url:'../process/search_order.php',
+                        data:{table:table, customer:name},
+                        dataType: 'text',
+                        success: function(data){
+                            $("#menuOrderHistory").append(data);
+
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                    });
+                }
+            }
+        
         });
     </script>
 </body>

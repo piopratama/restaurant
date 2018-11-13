@@ -20,10 +20,12 @@ $customer=$_POST['customer'];
 $meja=$_POST['meja'];
 $description=$_POST['description'];
 $total=$_POST['total'];
+$method = $_POST['method'];
+$status = $_POST['status'];
 
 $myInvoice = mysqli_query($conn, "Select invoice from tb_transaksi where customer='".$customer."' and id_meja=".$meja." and `status`='not paid'");
 
-if($myInvoice->num_rows>0)
+if(count($myInvoice)>0)
 {
     while($row=$myInvoice->fetch_assoc())
     {
@@ -44,22 +46,22 @@ for($i=0;$i<count($data);$i++)
     {
         if($meja!="")
         {
-            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."', 'not paid', '0')";
+            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".$total.", '', 'cash', '".$description."', 'paid', '0')";
         }
         else
         {
-            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."', 'not paid', '1')";
+            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".$total.", '', 'cash', '".$description."', 'paid', '1')";
         }
     }
     else
     {
         if($meja!="")
         {
-            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."' ,'not paid', '0')";
+            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".$total.", '', 'cash', '".$description."' ,'paid', '0')";
         }
         else
         {
-            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."' ,'not paid', '1')";
+            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".$total.", '', 'cash', '".$description."' ,'paid', '1')";
         }
     }
 }
@@ -72,5 +74,4 @@ if ($conn->query($sql) === TRUE) {
     $_SESSION['message']="Insert Error";
 }
 //header("location:../frontend/restaurant.php");
-
 ?>
