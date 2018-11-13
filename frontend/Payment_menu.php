@@ -464,6 +464,7 @@
                     var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
                     data.push(dataObject);
                 });
+
                 if($("#change").val()!="")
                 {
                     if(parseFloat($("#change").val())>=0)
@@ -471,7 +472,7 @@
                         $.ajax({
                             type: "POST",
                             url: "../process/payment.php",
-                            data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: $("paid"),method:$("#method").val()},
+                            data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: "paid",method:$("#method").val()},
                             dataType: "text",
                             success: function (response) {
                                 $("#message").html("Insert Successfully");

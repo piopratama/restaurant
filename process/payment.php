@@ -25,7 +25,7 @@ $status = $_POST['status'];
 
 $myInvoice = mysqli_query($conn, "Select invoice from tb_transaksi where customer='".$customer."' and id_meja=".$meja." and `status`='not paid'");
 
-if(count($myInvoice)>0)
+if($myInvoice->num_rows>0)
 {
     while($row=$myInvoice->fetch_assoc())
     {
