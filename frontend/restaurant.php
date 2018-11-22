@@ -20,7 +20,7 @@
     $sql1 = "SELECT id, meja FROM tb_meja";
     $data_meja = $conn->query($sql1);
 
-    $sql2 = "SELECT id, item, price, kategori FROM tb_menu where `status`='yes';";
+    $sql2 = "SELECT id, item, price, kategori, img_path FROM tb_menu where `status`='yes';";
     $data_menu = $conn->query($sql2);
 ?>
 <body>
@@ -35,7 +35,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="">Date</label>
-                        <input type="text" class="form-control" id="" name="date" placeholder="Date" value="<?php echo Date('Y-m-d'); ?>" readonly="readonly">
+                        <input type="text" class="form-control" id="date" name="date" placeholder="Date" value="<?php echo Date('Y-m-d'); ?>" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label for="">Customer</label>
@@ -107,7 +107,7 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <img src="../assets/img/<?php echo $row['img_path']?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
                                             <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
@@ -140,8 +140,8 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
-                                            <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                            <img src="../assets/img/<?php echo $row['img_path'] ?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <p class="text-center price">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
@@ -260,6 +260,39 @@
         </div>
     </div>
     
+    <div class="modal fade" id="exampleModal3">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="messageError">Please Select Menu</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal4">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="messageName">Please insert Menu</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php 
         $session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
@@ -279,35 +312,41 @@
             }*/
 
             $(".menuWrapper").on('click', '.addMenuOrder', function(){
-                var qty=$(this).parent().prev().find('.qty').val();
-                var type=$(this).parent().prev().find('.type').val();
-                var price=$(this).parent().prev().find('.price').val();
-                
-                if(parseFloat(qty)>0)
-                {
-                    if(parseInt(type)==1)
+                if($("#customer_name").val()==""){
+                    $("#messageName").html("Please Insert Name");
+                    $("#exampleModal4").modal('show');
+                }
+                else{
+                    var qty=$(this).parent().prev().find('.qty').val();
+                    var type=$(this).parent().prev().find('.type').val();
+                    var price=$(this).parent().prev().find('.price').val();
+                    
+                    if(parseFloat(qty)>0)
                     {
-                        $("#foodOrder").append($(this).parent().parent().parent().parent().html());
-                        
-                        $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
-                        
-                        $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+                        if(parseInt(type)==1)
+                        {
+                            $("#foodOrder").append($(this).parent().parent().parent().parent().html());
+                            
+                            $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+                            
+                            $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
-                        $("#foodOrder .qty:last").val(qty);
+                            $("#foodOrder .qty:last").val(qty);
+                        }
+                        else if(parseInt(type)==2)
+                        {
+                            $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
+                            
+                            $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+
+                            $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+
+                            $("#beverageOrder .qty:last").val(qty);
+                        }
+
+                        total=total+qty*parseFloat(price);
+                        $("#total").val(total);
                     }
-                    else if(parseInt(type)==2)
-                    {
-                        $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
-                        
-                        $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
-
-                        $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
-
-                        $("#beverageOrder .qty:last").val(qty);
-                    }
-
-                    total=total+qty*parseFloat(price);
-                    $("#total").val(total);
                 }
             });
             
@@ -364,27 +403,81 @@
 
             $("#submitBtn").click(function(){
                 var data = new Array();
+                if(($("#total").val()=="")||($("#total").val()=="0")){
+                    $("#messageError").html("Please Select Menu");
+                    $("#exampleModal3").modal('show');
+                }
+                else
+                {
+                    $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                        var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
+                        data.push(dataObject);
+                    });
 
-                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
-                    data.push(dataObject);
-                });
+                    $.ajax({
+                        type: "POST",
+                        url: "../process/insertOrder.php",
+                        data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
+                        dataType: "text",
+                        success: function (response) {
+                            console.log(response);
+                            $("#message").html("Insert Successfully");
+                            $("#exampleModal2").modal('show');
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            $("#message").html("Insert Unsuccessfully");
+                            $("#exampleModal2").modal('show');
+                        }
+                    }); 
 
-                $.ajax({
-                    type: "POST",
-                    url: "../process/insertOrder.php",
-                    data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
-                    dataType: "text",
-                    success: function (response) {
-                        console.log(response);
-                        $("#message").html("Insert Successfully");
-                        $("#exampleModal2").modal('show');
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        $("#message").html("Insert Unsuccessfully");
-                        $("#exampleModal2").modal('show');
-                    }
-                });
+                    var printer = new Recta('3245260761', '1811');
+                    printer.open().then(function () {
+                        var x=[];
+                        printer.align('center')	
+                        .text('RESTAURNT')
+                        .bold(true)
+                        .text($("#date").val())	
+                        .text('------------------------------');
+                        printer.align('left')
+                        .text()
+                        .bold(true);
+                        
+                        $(".qty").each(function() {
+                            x.push({qty:$(this).val(),item:"",price:"",total:""});
+                        });
+                        var i=0;
+                        $(".item").each(function() {
+                            x[i].item=$(this).find('option:selected').text();
+                            i=i+1;
+                        });
+                        i=0;
+                        $(".price").each(function() {
+                            x[i].price=$(this).val();
+                            i=i+1;
+                        });
+                        i=0;
+                        $(".total").each(function() {
+                            x[i].total=$(this).val();
+                            i=i+1;
+                        });
+                        i=0;
+                        printer.text("Item").bold(true);
+                        printer.text("Qty     Price(Rp)     Total(Rp)")
+                        .bold(true);
+                        printer.text("");
+                        for(var j=0;j<x.length;j++)
+                        {
+                            printer.text(x[j].item);
+                            printer.text(x[j].qty+"       "+x[j].price+"     "+x[j].total);
+                            printer.text("");
+                        }
+                        
+                        printer.bold(true);
+                        printer.text("------------------------------")
+                        .cut()
+                        .print();
+                    });
+                }
             });
         });
     </script>

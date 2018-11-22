@@ -122,8 +122,8 @@
 			unset($_SESSION['message']);
 		?>
 
-		<?php include("./templates/footer.php"); ?>
-		<script src="./assets/jquery-ui.js"></script>
+		<?php include("../layout/footercasier.php"); ?>
+		<script src="../assets/jquery-ui.js"></script>
 		<script>
 			$(document).ready(function() {
 				$('#year').datepicker({
