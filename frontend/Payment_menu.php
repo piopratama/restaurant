@@ -13,14 +13,14 @@
             }
         }
     }
-    $title="Order";
+    $title="Payment";
     include('../layout/headercasier.php');
 
     require('../koneksi.php');
     $sql1 = "SELECT id, meja FROM tb_meja";
     $data_meja = $conn->query($sql1);
 
-    $sql2 = "SELECT id, item, price, kategori, img_path FROM tb_menu where `status`='yes';";
+    $sql2 = "SELECT id, item, price, kategori FROM tb_menu where `status`='yes';";
     $data_menu = $conn->query($sql2);
 ?>
 <body>
@@ -35,7 +35,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="">Date</label>
-                        <input type="text" class="form-control" id="date" name="date" placeholder="Date" value="<?php echo Date('Y-m-d'); ?>" readonly="readonly">
+                        <input type="text" class="form-control" id="" name="date" placeholder="Date" value="<?php echo Date('Y-m-d'); ?>" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label for="">Customer</label>
@@ -116,7 +116,7 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['img_path']?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
                                             <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
@@ -149,8 +149,8 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['img_path'] ?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
-                                            <p class="text-center price">IDR <?php echo rupiah($row['price']); ?></p>
+                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
@@ -198,6 +198,28 @@
                     </div>
                 </div>
             </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-12" id="ordereddHistory">
+                    <h2 class="text-center">Ordered History</h2>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#menuOrderHistory" aria-controls="menuOrderHistory" role="tab" data-toggle="tab">History</a>
+                            </li>
+                        </ul>
+                            
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active menuWrapperOrderHistory" id="menuOrderHistory">
+                                <h3 class="text-center"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
@@ -208,7 +230,7 @@
                 </div>
                 <div class="col-md-4"></div>
             </div>
-            <!--<div class="row">
+            <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -241,7 +263,7 @@
                     </div>
                 </div>
                 <div class="col-md-4"></div>
-            </div>-->
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -269,39 +291,6 @@
         </div>
     </div>
     
-    <div class="modal fade" id="exampleModal3">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Warning</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="messageError">Please Select Menu</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="exampleModal4">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Warning</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="messageName">Please insert Menu</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <?php 
         $session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
@@ -321,69 +310,65 @@
             }*/
 
             $(".menuWrapper").on('click', '.addMenuOrder', function(){
-                if($("#customer_name").val()==""){
-                    $("#messageName").html("Please Insert Name");
-                    $("#exampleModal4").modal('show');
-                }
-                else{
-                    var qty=$(this).parent().prev().find('.qty').val();
-                    var type=$(this).parent().prev().find('.type').val();
-                    var price=$(this).parent().prev().find('.price').val();
-                    
-                    if(parseFloat(qty)>0)
+                var qty=$(this).parent().prev().find('.qty').val();
+                var type=$(this).parent().prev().find('.type').val();
+                var price=$(this).parent().prev().find('.price').val();
+                
+                if(parseFloat(qty)>0)
+                {
+                    if(parseInt(type)==1)
                     {
-                        if(parseInt(type)==1)
-                        {
-                            $("#foodOrder").append($(this).parent().parent().parent().parent().html());
-                            
-                            $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
-                            
-                            $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+                        $("#foodOrder").append($(this).parent().parent().parent().parent().html());
+                        
+                        $("#foodOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
+                        
+                        $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
-<<<<<<< HEAD
-                            $("#foodOrder .qty:last").val(qty);
-                        }
-                        else if(parseInt(type)==2)
-                        {
-                            $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
-                            
-                            $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
-=======
                         $("#foodOrder .qty:last").val(qty);
                     }
                     else if(parseInt(type)==2)
-                    { 
+                    {
                         $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
                         
                         $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
->>>>>>> 0fc00d4e2736eb41e51c38b1832720c04aeb87ab
 
-                            $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
+                        $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
-                            $("#beverageOrder .qty:last").val(qty);
-                        }
-
-                        total=total+qty*parseFloat(price);
-                        $("#total").val(total);
+                        $("#beverageOrder .qty:last").val(qty);
                     }
+
+                    total=0;
+                    $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                        total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                    });
+
+                    $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                        total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                    });
+
+                    $("#total").val(total);
                 }
             });
             
-            /*$("#payment").keyup(function(){
+            $("#payment").keyup(function(){
                 var totalVal=$("#total").val();
                 if(totalVal!="" && $(this).val()!="")
                 {
-                    $("#change").val(totalVal-parseFloat($(this).val()));
+                    $("#change").val(parseFloat($(this).val())-totalVal);
                 }
-            });*/
+            });
 
             $(".menuWrapperOrder").on('click', '.addMenuOrder', function(){
                 var s=$(this).parent().parent().parent().find('.title-menu').text();
                 s = s.substring(0, s.indexOf('('))+"("+$(this).parent().prev().find('.qty').val()+")";
                 $(this).parent().parent().parent().find('.title-menu').html(s);
-                
+
                 total=0;
                 $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                });
+
+                $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                     total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                 });
 
@@ -394,9 +379,44 @@
                 $(this).parent().parent().parent().remove();
                 var rmPrice=$(this).parent().prev().find('.price').val();
                 var rmQty=$(this).parent().prev().find('.qty').val();
-                
+
                 total=total-rmQty*parseFloat(rmPrice);
                 $("#total").val(total);
+            });
+            
+            $("#customer_name").keyup(function (e) {
+                var idMenu=$("#search_menu").val();
+                var textMenu=$("#search_menu").find('option:selected').text();
+                if(idMenu!="")
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "../process/getMenuById.php",
+                        data: {id:idMenu},
+                        dataType: "text",
+                        success: function (response) {
+                            if(textMenu.indexOf('food')!=-1)
+                            {
+                                $("#foodOrder").append(response);
+                            }
+                            else
+                            {
+                                $("#beverageOrder").append(response);
+                            }
+
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                    });
+                }
             });
 
             $("#search_menu").change(function(){
@@ -422,129 +442,91 @@
                         $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
                             total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                         });
-                        $("#total").val(total);
-                    }
-                });
-            });
 
-            $("#customer_table").change(function(){
-                var idMeja=$(this).val();
-                
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaFood.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#foodOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                        $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                             total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
                         });
 
                         $("#total").val(total);
                     }
                 });
-
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaBeverage.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#beverageOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                            total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
-                        });
-
-                        $("#total").val(total);
-                    }
-                });
-            });
-
-            $("#clearBtn").click(function(){
-                location.reload();
             });
 
             $("#submitBtn").click(function(){
                 var data = new Array();
-                if(($("#total").val()=="")||($("#total").val()=="0")){
-                    $("#messageError").html("Please Select Menu");
-                    $("#exampleModal3").modal('show');
-                }
-                else
+
+                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
+                    data.push(dataObject);
+                });
+
+                $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
+                    data.push(dataObject);
+                });
+
+                if($("#change").val()!="")
                 {
-                    $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                        var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val()};
-                        data.push(dataObject);
-                    });
-
-                    $.ajax({
-                        type: "POST",
-                        url: "../process/insertOrder.php",
-                        data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
-                        dataType: "text",
-                        success: function (response) {
-                            console.log(response);
-                            $("#message").html("Insert Successfully");
-                            $("#exampleModal2").modal('show');
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $("#message").html("Insert Unsuccessfully");
-                            $("#exampleModal2").modal('show');
-                        }
-                    }); 
-
-                    var printer = new Recta('3245260761', '1811');
-                    printer.open().then(function () {
-                        var x=[];
-                        printer.align('center')	
-                        .text('RESTAURNT')
-                        .bold(true)
-                        .text($("#date").val())	
-                        .text('------------------------------');
-                        printer.align('left')
-                        .text()
-                        .bold(true);
-                        
-                        $(".qty").each(function() {
-                            x.push({qty:$(this).val(),item:"",price:"",total:""});
+                    if(parseFloat($("#change").val())>=0)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: "../process/payment.php",
+                            data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: "paid",method:$("#method").val()},
+                            dataType: "text",
+                            success: function (response) {
+                                $("#message").html("Insert Successfully");
+                                $("#exampleModal2").modal('show');
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $("#message").html("Insert Unsuccessfully");
+                                $("#exampleModal2").modal('show');
+                            }
                         });
-                        var i=0;
-                        $(".item").each(function() {
-                            x[i].item=$(this).find('option:selected').text();
-                            i=i+1;
-                        });
-                        i=0;
-                        $(".price").each(function() {
-                            x[i].price=$(this).val();
-                            i=i+1;
-                        });
-                        i=0;
-                        $(".total").each(function() {
-                            x[i].total=$(this).val();
-                            i=i+1;
-                        });
-                        i=0;
-                        printer.text("Item").bold(true);
-                        printer.text("Qty     Price(Rp)     Total(Rp)")
-                        .bold(true);
-                        printer.text("");
-                        for(var j=0;j<x.length;j++)
-                        {
-                            printer.text(x[j].item);
-                            printer.text(x[j].qty+"       "+x[j].price+"     "+x[j].total);
-                            printer.text("");
-                        }
-                        
-                        printer.bold(true);
-                        printer.text("------------------------------")
-                        .cut()
-                        .print();
-                    });
+                    }
                 }
             });
+            
+            $("#customer_table").change(function(){
+                search_payment();
+            });
+
+            $("#customer_name").keyup(function(){
+                search_payment();
+            });
+            
+            $("#clearBtn").click(function(){
+                location.reload();
+            });
+
+            function search_payment(){
+                var table = $("#customer_table").val();
+                var name = $("#customer_name").val();
+                if(table!="")
+                {
+                    $.ajax({
+                        type:'POST',
+                        url:'../process/search_order.php',
+                        data:{table:table, customer:name},
+                        dataType: 'text',
+                        success: function(data){
+                            $("#menuOrderHistory").append(data);
+
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                    });
+                }
+            }
+        
         });
     </script>
 </body>
