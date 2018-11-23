@@ -384,7 +384,7 @@
                 $("#total").val(total);
             });
             
-            $("#customer_name").keyup(function (e) {
+            /*$("#customer_name").keyup(function (e) {
                 var idMenu=$("#search_menu").val();
                 var textMenu=$("#search_menu").find('option:selected').text();
                 if(idMenu!="")
@@ -417,7 +417,7 @@
                         }
                     });
                 }
-            });
+            });*/
 
             $("#search_menu").change(function(){
                 var idMenu=$(this).val();
@@ -475,6 +475,7 @@
                             data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: "paid",method:$("#method").val()},
                             dataType: "text",
                             success: function (response) {
+                                console.log(response);
                                 $("#message").html("Insert Successfully");
                                 $("#exampleModal2").modal('show');
                             },
@@ -485,6 +486,65 @@
                         });
                     }
                 }
+
+                var printer = new Recta('3245260761', '1811');
+                var data = new Array();
+                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    var qty=$(this).next().val();
+                    var price=$(this).prev().val();
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
+                    data.push(dataObject);
+                });
+
+                printer.open().then(function () {
+                    var x=[];
+                    printer.align('center')	
+                    .text('RESTAURANT')
+                    .bold(true)
+                    .text($("#date").val())	
+                    .text("Name  :" + $("#customer_name").val())
+                    .text("Table :" + $("#customer_table").val())
+                    .text("Method :" + $("#method").val())	
+                    .text('------------------------------')
+                    printer.align('left')
+                    .text()
+                    .bold(true);
+                    
+                    
+                    i=0;
+                    printer.text("Item").bold(true);
+                    printer.text("Qty     Price(Rp)     Total(Rp)")
+                    .bold(true);
+                    printer.text("");
+                    printer.text("Food");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="1" || data[j].type=="food")
+                        {
+                            printer.text(data[j].itemName);
+                            printer.text(data[j].qty+"       "+data[j].price+"     "+data[j].total);
+                            printer.text("");
+                        }
+                    }
+                    printer.text("");
+                    printer.text("Bevarage");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="2" || data[j].type=="beverage")
+                        {
+                            printer.text(data[j].itemName);
+                            printer.text(data[j].qty+"       "+data[j].price+"     "+data[j].total);
+                            printer.text("");
+                        }
+                    }
+                    printer.bold(true);
+                    printer.text("------------------------------")
+                    .text("Total   :" + $("#total").val())
+                    .text("Payment :" + $("#payment").val())
+                    .text("Change  :" + $("#change").val())
+                    .cut()
+                    .print();
+                });
             });
             
             $("#customer_table").change(function(){
@@ -510,7 +570,7 @@
                         data:{table:table, customer:name},
                         dataType: 'text',
                         success: function(data){
-                            $("#menuOrderHistory").append(data);
+                            $("#menuOrderHistory").html(data);
 
                             total=0;
                             $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){

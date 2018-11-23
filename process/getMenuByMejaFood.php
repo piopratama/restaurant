@@ -23,10 +23,12 @@ else
 
 require('../koneksi.php');
 
-$sql1 = "SELECT tb_menu.id, tb_menu.item, tb_transaksi.price, tb_kategori.kategori, tb_transaksi.qty from tb_transaksi inner join tb_menu on tb_transaksi.id_menu=tb_menu.id inner join tb_kategori on tb_kategori.id=tb_menu.kategori where id_meja=".$_POST['idMeja']." and tb_kategori.id=1";
+$sql1 = "SELECT tb_menu.id, tb_menu.item, tb_transaksi.price, tb_kategori.kategori, tb_transaksi.qty from tb_transaksi inner join tb_menu on tb_transaksi.id_menu=tb_menu.id inner join tb_kategori on tb_kategori.id=tb_menu.kategori where id_meja=".$_POST['idMeja']." and tb_kategori.id=1 and tb_transaksi.status='not paid' and customer='".$_POST['customer']."'";
+
 $data_menu = $conn->query($sql1);
 
 $html="";
+$html=$html."<h3 class='text-center'>Food</h3>";
 while($row=$data_menu->fetch_assoc())
 {
     $html=$html."<div class='dropdown'>";

@@ -21,15 +21,18 @@ $meja=$_POST['meja'];
 $description=$_POST['description'];
 $total=$_POST['total'];
 
-$myInvoice = mysqli_query($conn, "Select invoice from tb_transaksi where customer='".$customer."' and id_meja=".$meja." and `status`='not paid'");
-
-if($myInvoice->num_rows>0)
+if($meja!="")
 {
-    while($row=$myInvoice->fetch_assoc())
+    $myInvoice = mysqli_query($conn, "Select invoice from tb_transaksi where customer='".$customer."' and id_meja=".$meja." and `status`='not paid'");
+
+    if($myInvoice->num_rows>0)
     {
-        $invoice=$row['invoice'];
+        while($row=$myInvoice->fetch_assoc())
+        {
+            $invoice=$row['invoice'];
+        }
+        mysqli_query($conn, "delete from tb_transaksi where invoice='".$invoice."'");
     }
-    mysqli_query($conn, "delete from tb_transaksi where invoice='".$invoice."'");
 }
 else
 {
@@ -48,7 +51,7 @@ for($i=0;$i<count($data);$i++)
         }
         else
         {
-            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."', 'not paid', '1')";
+            $value=$value."('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", '', ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."', 'not paid', '1')";
         }
     }
     else
@@ -59,12 +62,13 @@ for($i=0;$i<count($data);$i++)
         }
         else
         {
-            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", ".$meja.", ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."' ,'not paid', '1')";
+            $value=$value.",('".$invoice."', '".Date('Y-m-d')."', '".Date('Y-m-d H:i:s')."', '".$customer."',".$_SESSION["id_kasir"].", ".$data[$i]->id.", '', ".$data[$i]->qty.", ".$data[$i]->price.", ".($data[$i]->qty*$data[$i]->price).", '', 'cash', '".$description."' ,'not paid', '1')";
         }
     }
 }
 
 $sql = mysqli_query($conn, "INSERT INTO tb_transaksi(`invoice`, `date`, `date_insert`, `customer`, `id_employee`, `id_menu`, `id_meja`, `qty`, `price`, `total_price`, `rest_total`, `method`, `description`, `status`, `method_order`) values".$value."");
+
 
 if ($conn->query($sql) === TRUE) {
     $_SESSION['message']="Insert Successfully";

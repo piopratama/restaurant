@@ -116,8 +116,8 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['img_path']?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
-                                            <p class="text-center">IDR <?php echo rupiah($row['price']); ?></p>
+                                            <img src="../assets/img/<?php echo $row['id']?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <p class="text-center priceMenu">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
                                                     <label for="">Qty</label>
@@ -149,7 +149,7 @@
                                     <div class="dropdown">
                                         <div class="col-sm-3 myMenu">
                                             <p class="text-center title-menu"><?php echo $row['item'] ?></p>
-                                            <img src="../assets/img/<?php echo $row['img_path'] ?>" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
+                                            <img src="../assets/img/<?php echo $row['id'] ?>.jpg" alt="<?php echo $row['item']; ?>" width="100" height="73" class="dropdown-toggle imageMenu" data-toggle="dropdown">
                                             <p class="text-center price">IDR <?php echo rupiah($row['price']); ?></p>
                                             <div class="dropdown-menu dropdown-menu-myStyle">
                                                 <div class="form-group">
@@ -340,15 +340,6 @@
                             
                             $("#foodOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
-<<<<<<< HEAD
-                            $("#foodOrder .qty:last").val(qty);
-                        }
-                        else if(parseInt(type)==2)
-                        {
-                            $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
-                            
-                            $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
-=======
                         $("#foodOrder .qty:last").val(qty);
                     }
                     else if(parseInt(type)==2)
@@ -356,7 +347,6 @@
                         $("#beverageOrder").append($(this).parent().parent().parent().parent().html());
                         
                         $("#beverageOrder .mybtn-dropdown").html("<button type='button' class='btn btn-primary pull-right removeMenuOrder'>Delete</button><button type='button' class='btn btn-primary pull-right addMenuOrder' style='margin-right:2px;'>Update</button>");
->>>>>>> 0fc00d4e2736eb41e51c38b1832720c04aeb87ab
 
                             $("#beverageOrder .title-menu:last").html($(this).parent().parent().parent().parent().find('.title-menu').html()+" ("+qty+") ");
 
@@ -426,41 +416,53 @@
                     }
                 });
             });
+            
+            function search_order(){
+                var idMeja=$("#customer_table").val();
+                var name = $("#customer_name").val();
+                if(idMeja!="")
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "../process/getMenuByMejaFood.php",
+                        data: {idMeja:idMeja, customer:name},
+                        dataType: "text",
+                        success: function (response) {
+                            $("#foodOrder").html(response);
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../process/getMenuByMejaBeverage.php",
+                        data: {idMeja:idMeja, customer:name},
+                        dataType: "text",
+                        success: function (response) {
+                            $("#beverageOrder").html(response);
+                            total=0;
+                            $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                                total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
+                            });
+
+                            $("#total").val(total);
+                        }
+                    });
+                }
+            }
 
             $("#customer_table").change(function(){
-                var idMeja=$(this).val();
-                
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaFood.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#foodOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                            total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
-                        });
-
-                        $("#total").val(total);
-                    }
-                });
-
-                $.ajax({
-                    type: "POST",
-                    url: "../process/getMenuByMejaBeverage.php",
-                    data: {idMeja:idMeja},
-                    dataType: "text",
-                    success: function (response) {
-                        $("#beverageOrder").append(response);
-                        total=0;
-                        $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
-                            total=total+parseFloat($(this).next().val())*parseFloat($(this).prev().val());
-                        });
-
-                        $("#total").val(total);
-                    }
-                });
+                search_order();
+            });
+            
+            $("#customer_name").keyup(function (e) {
+                search_order();
             });
 
             $("#clearBtn").click(function(){
@@ -486,7 +488,6 @@
                         data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val()},
                         dataType: "text",
                         success: function (response) {
-                            console.log(response);
                             $("#message").html("Insert Successfully");
                             $("#exampleModal2").modal('show');
                         },
@@ -495,55 +496,60 @@
                             $("#exampleModal2").modal('show');
                         }
                     }); 
+                }
 
-                    var printer = new Recta('3245260761', '1811');
-                    printer.open().then(function () {
-                        var x=[];
-                        printer.align('center')	
-                        .text('RESTAURNT')
-                        .bold(true)
-                        .text($("#date").val())	
-                        .text('------------------------------');
-                        printer.align('left')
-                        .text()
-                        .bold(true);
-                        
-                        $(".qty").each(function() {
-                            x.push({qty:$(this).val(),item:"",price:"",total:""});
-                        });
-                        var i=0;
-                        $(".item").each(function() {
-                            x[i].item=$(this).find('option:selected').text();
-                            i=i+1;
-                        });
-                        i=0;
-                        $(".price").each(function() {
-                            x[i].price=$(this).val();
-                            i=i+1;
-                        });
-                        i=0;
-                        $(".total").each(function() {
-                            x[i].total=$(this).val();
-                            i=i+1;
-                        });
-                        i=0;
-                        printer.text("Item").bold(true);
-                        printer.text("Qty     Price(Rp)     Total(Rp)")
-                        .bold(true);
-                        printer.text("");
-                        for(var j=0;j<x.length;j++)
+                var printer = new Recta('3245260761', '1811');
+                var data = new Array();
+                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    var qty=$(this).next().val();
+                    var price=$(this).prev().val();
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
+                    data.push(dataObject);
+                });
+                printer.open().then(function () {
+                    var x=[];
+                    printer.align('center')	
+                    .text('RESTAURANT')
+                    .bold(true)
+                    .text($("#date").val())	
+                    .text("Name  :" + $("#customer_name").val())
+                    .text("Table :" + $("#customer_table").val())	
+                    .text('------------------------------')
+                    printer.align('left')
+                    .text()
+                    .bold(true);
+                    
+                    
+                    i=0;
+                    printer.text("Item").bold(true);
+                    printer.text("Qty     Price(Rp)     Total(Rp)")
+                    .bold(true);
+                    printer.text("");
+                    printer.text("Food");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="1" || data[j].type=="food")
                         {
-                            printer.text(x[j].item);
-                            printer.text(x[j].qty+"       "+x[j].price+"     "+x[j].total);
+                            printer.text(data[j].itemName);
                             printer.text("");
                         }
-                        
-                        printer.bold(true);
-                        printer.text("------------------------------")
-                        .cut()
-                        .print();
-                    });
-                }
+                    }
+                    printer.text("");
+                    printer.text("Bevarage");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="2" || data[j].type=="beverage")
+                        {
+                            printer.text(data[j].itemName);
+                            printer.text("");
+                        }
+                    }
+                    printer.bold(true);
+                    printer.text("------------------------------")
+                    .text($("#description").text())
+                    .cut()
+                    .print();
+                });
             });
         });
     </script>
