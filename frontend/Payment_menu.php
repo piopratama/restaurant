@@ -7,7 +7,7 @@
     {
         if(!empty($_SESSION['level_user']))
         {
-            if($_SESSION["level_user"]==1)
+            if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==1)
             {
                 header("location:index.php");
             }
