@@ -28,7 +28,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			header("location:../backend/dashboard.php");
 			}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 			}
 	}
 	elseif ($b=='0'){
@@ -45,7 +45,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			header("location:../frontend/restaurant.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 		}
 	}
 	elseif ($b=='2'){
@@ -62,7 +62,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			header("location:../frontend/payment_menu.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 		}
 	}
 	
