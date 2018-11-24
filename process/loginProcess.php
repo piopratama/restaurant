@@ -59,7 +59,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			}
 			$_SESSION['level_user']=0;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
-			header("location:../frontend/payment_menu.php");
+			header("location:../frontend/main_menu.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
 			header("location:..");
@@ -72,6 +72,6 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 else
 {
 	$_SESSION["message"]="Login Failed";
-	header("location:index.php");
+	header("location:..");
 }
 ?>
