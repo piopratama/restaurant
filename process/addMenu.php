@@ -1,5 +1,20 @@
 <?php
-								// Check If form submitted, insert form data into users table.
+	session_start();
+    if(empty($_SESSION['username'])){
+        header("location:..");
+    }
+    else
+    {
+        if(!empty($_SESSION['level_user']))
+        {
+            if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==2)
+            {
+                header("location:../index.php");
+            }
+        }
+    }
+
+	// Check If form submitted, insert form data into users table.
 	$item = $_POST['item'];
 	$price = $_POST['price'];
 	$type = $_POST['type'];

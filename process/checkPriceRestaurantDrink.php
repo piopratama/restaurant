@@ -1,10 +1,18 @@
 <?php
 	session_start();
-
-	/*if(empty($_SESSION['username'])){
-		header("location:index.php");
-	}*/
-	
+    if(empty($_SESSION['username'])){
+        header("location:..");
+    }
+    else
+    {
+        if(!empty($_SESSION['level_user']))
+        {
+            if($_SESSION["level_user"]==1)
+            {
+                header("location:../index.php");
+            }
+        }
+    }
 	
 	require 'koneksi.php';
 	$sql = "SELECT * FROM tb_restaurant WHERE type='drink'";

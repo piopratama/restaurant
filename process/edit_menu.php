@@ -6,15 +6,15 @@ session_start();
 $title="Update Stock";
 
 if(empty($_SESSION['username'])){
-	header("location:index.php");
+	header("location:..");
 }
 else
 {
 	if(!empty($_SESSION['level_user']))
 	{
-		if($_SESSION["level_user"]==0)
+		if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==2)
 		{
-			header("location:index.php");
+			header("location:../index.php");
 		}
 	}
 }
