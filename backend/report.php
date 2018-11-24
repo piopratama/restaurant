@@ -39,7 +39,7 @@
 									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Shop</a>
 								</div>
 									<ul class="nav navbar-nav navbar-right">
-										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px;" href="logout.php">Logout</a></li>
+										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px;" href="../logout.php">Logout</a></li>
 										<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
 									</ul>
 								</div><!-- /.navbar-collapse -->
@@ -283,11 +283,11 @@
 					getTableCustomerStatus();
 				});
 				
-				$("##date_start").change(function(){
+				$("#date_start").change(function(){
 					getCustomerStatus();
 				});
 
-				$("##date_stop").change(function(){
+				$("#date_stop").change(function(){
 					getCustomerStatus();
 				});
 

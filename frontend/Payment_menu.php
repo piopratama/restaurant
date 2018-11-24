@@ -9,7 +9,7 @@
         {
             if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==1)
             {
-                header("location:index.php");
+                header("location:..");
             }
         }
     }
@@ -56,6 +56,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="main_menu.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
                     <h1 class="text-center">Restaurant</h1>
                 </div>
             </div>

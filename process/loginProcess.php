@@ -57,7 +57,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 				$_SESSION["username"]=$usernamed;
 	        	$_SESSION["id_kasir"]=$row["id"];
 			}
-			$_SESSION['level_user']=0;
+			$_SESSION['level_user']=2;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
 			header("location:../frontend/main_menu.php");
 		}else{

@@ -1,19 +1,19 @@
 <?php
-	 session_start();
-	 if(empty($_SESSION['username'])){
-		 header("location:..");
-	 }
-	 else
-	 {
-		 if(!empty($_SESSION['level_user']))
-		 {
-			 if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==2)
-			 {
-				 header("location:../index.php");
-			 }
-		 }
-	 }
-	 $title="Add Menu";
+	session_start();
+    if(empty($_SESSION['username'])){
+        header("location:..");
+    }
+    else
+    {
+        if(!empty($_SESSION['level_user']))
+        {
+            if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==2)
+            {
+                header("location:..");
+            }
+        }
+    }
+	$title="Add Menu";
 	include('../layout/headercasier.php');
 	require('../koneksi.php');
 	$sql = "SELECT * FROM tb_kategori";
