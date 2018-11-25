@@ -1,4 +1,10 @@
 <?php
+function rupiah($angka){
+	
+	$hasil_rupiah = "Rp " . number_format($angka,2,',','.');
+	return $hasil_rupiah;
+ 
+}
 session_start();
 if(empty($_SESSION['username'])){
 	header("location:..");
@@ -13,11 +19,106 @@ else
 		}
 	}
 }
-ini_set("session.auto_start", 0);
-require('../fpdf181/fpdf.php');
+
+require_once '../vendor/autoload.php';
+$mpdf = new \Mpdf\Mpdf();
+
 $start = $_POST['start'];
 $end = $_POST['end'];
 
+require '../koneksi.php';
+if($_POST['Submit']=='Print'){
+	if($start&&$end!=null){
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.method, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`date`) BETWEEN '".$start."' AND '".$end."' and tb_transaksi.`status`='paid'";
+	}elseif($start!=null&&$end==null){
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.method, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`date`)='".$start."' and tb_transaksi.`status`='paid'";
+	}else{
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.method, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee where tb_transaksi.`status`='paid'";
+	}
+	$result = $conn->query($sql);
+	echo $sql;
+	if ($result->num_rows > 0) {
+		$i=0;
+		$sum=0;
+		$html="<h1>Transaction Deli Shop</h1><table border='1'><tr><td>Date</td><td>Invoice</td><td>Employee</td><td>Customer</td><td>Item</td><td>Qty</td><td>Price</td><td>Total Price</td><td>Method</td><td>Status</td></tr>";
+		while($row = $result->fetch_assoc()) {
+			$html=$html."<tr>";
+			$html=$html."<td>".$row["tnggl"]."</td>";
+			$html=$html."<td>".$row["invoice"]."</td>";
+			$html=$html."<td>".$row["nama"]."</td>";
+			$html=$html."<td>".$row["nm_transaksi"]."</td>";
+			$html=$html."<td>".$row["item"]."</td>";
+			$html=$html."<td>".$row["qty"]."</td>";
+			$html=$html."<td>".$row["price"]."</td>";
+			$html=$html."<td>".$row["total_price"]."</td>";
+			$html=$html."<td>".$row["method"]."</td>";
+			$html=$html."<td>".($row["statuss"]==1 ? "paid":"not paid")."</td>";
+			$html=$html."</tr>";
+			$sum=$sum+$row["total_price"];
+			$i=$i+1;
+		}
+		$html=$html."</table>";
+		$html=$html."<h1 style='text-align:center'>".rupiah($sum)."</h1>";
+		// Write some HTML code:
+		$filename=date('Y-m-d').".pdf";
+		$mpdf->WriteHTML($html);
+
+		// Output a PDF file directly to the browser
+		$mpdf->Output($filename,'I');
+		header("location:../backend/report.php");
+	} 
+	else 
+	{
+		$_SESSION["message"]="No Data to Report";
+		header("location:../backend/report.php");
+	}
+}
+else if($_POST['Submit']=='Pajak')
+{
+	if($start&&$end!=null){
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`date`) BETWEEN '$start' AND '$end' and tb_transaksi.`status`='paid' GROUP BY tb_kategori.`id`";
+	}elseif($start!=null&&$end==null){
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`date`)='$start' and tb_transaksi.`status`='paid' GROUP BY tb_kategori.`id`";
+	}else{
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` where tb_transaksi.`status`='paid' GROUP BY tb_kategori.`id`";
+	}
+
+	$result = $conn->query($sql);
+	if ($result->num_rows > 0) {
+		$i=0;
+		$sum=0;
+		$html="<h1>Tax Deli Shop</h1><table border='1'><tr><td>Type</td><td>Total</td></tr>";
+		while($row = $result->fetch_assoc()) {
+			$html=$html."<tr>";
+			$html=$html."<td>".$row["kategori"]."</td>";
+			$html=$html."<td>".$row["total"]."</td>";
+			$html=$html."</tr>";
+			$sum=$sum+$row["total"];
+			$i=$i+1;
+		}
+		$html=$html."</table>";
+		$html=$html."<h1 style='text-align:center'>".rupiah($sum)."</h1>";
+		// Write some HTML code:
+		$mpdf->WriteHTML($html);
+		$filename="Pajak".date('Y-m-d').".pdf";
+		// Output a PDF file directly to the browser
+		$mpdf->Output($filename, 'I');
+		header("location:../backend/report.php");
+	}
+	else {
+		$_SESSION["message"]="No Data to Report";
+		header("location:../backend/report.php");
+	}
+}
+
+/*require_once('./fpdf181/fpdf.php');
+$start = $_POST['start'];
+$end = $_POST['end'];
+
+require 'koneksi.php';
 if($_POST['Submit']=='Print'){
 	
 class PDF extends FPDF
@@ -70,7 +171,6 @@ class PDF extends FPDF
 	}
 }
 
-require '../koneksi.php';
 $pdf = new PDF();
 // Column headings
 $header = array('Date', 'Invoice', 'Employee', 'Customer', 'Item', 'Qty', 'Price', 'Total Price', 'Status');
@@ -79,12 +179,12 @@ $header = array('Date', 'Invoice', 'Employee', 'Customer', 'Item', 'Qty', 'Price
 
 //$invoice=$_POST['invoice'];
 	if($start&&$end!=null){
-			$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`datel`) BETWEEN '".$start."' AND '".$end."' ";
-		}elseif($start!=null&&$end==null){
-			$sql = "SELECT DATE(`datel`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`datel`)='".$start."' ";
-		}else{
-			$sql = "SELECT DATE(`datel`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee";
-		}
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`date`) BETWEEN '".$start."' AND '".$end."' ";
+	}elseif($start!=null&&$end==null){
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee WHERE DATE(`date`)='".$start."' ";
+	}else{
+		$sql = "SELECT DATE(`date`) as tnggl, invoice, tb_employee.nama, customer as nm_transaksi, tb_menu.item, qty, tb_menu.price, total_price, tb_transaksi.`status` as statuss FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee";
+	}
 	//$sql = "SELECT * FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee";
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
@@ -99,7 +199,7 @@ $header = array('Date', 'Invoice', 'Employee', 'Customer', 'Item', 'Qty', 'Price
 			$data[$i][5]=$row["qty"];
 			$data[$i][6]=$row["price"];
 			$data[$i][7]=$row["total_price"];
-			if($row["statuss"]==1)
+			if($row["tb_transaksi.`status` as statuss"]==1)
 			{
 				$data[$i][8]="paid";
 			}
@@ -111,7 +211,17 @@ $header = array('Date', 'Invoice', 'Employee', 'Customer', 'Item', 'Qty', 'Price
 		$pdf->SetFont('Arial','',9);
 		$pdf->AddPage();
 		$pdf->FancyTable($header,$data);
-		$pdf->Output('I',date('Y-m-d').".pdf");
+		$filename=date('Y-m-d').".pdf";
+		$pdf->Output('F',$filename);
+		$file = $filename;
+		$filename = $filename;
+		header('Content-type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $filename . '"');
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Length: ' . filesize($file));
+		header('Accept-Ranges: bytes');
+		@readfile($file);
+		//header("location:report.php");
 	} else {
 		$_SESSION["message"]="No Data to Report";
 		header("location:report.php");
@@ -170,17 +280,15 @@ $header = array('Category', 'Total Penjualan' );
 
 //$invoice=$_POST['invoice'];
 	if($start&&$end!=null){
-			$sql = "SELECT tb_kategori.`nm_kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_item` 
-			LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`datel`) BETWEEN '$start' AND '$end' GROUP BY tb_kategori.`id`";
-		}elseif($start!=null&&$end==null){
-			$sql = "SELECT tb_kategori.`nm_kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_item` 
-			LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`datel`)='$start' GROUP BY tb_kategori.`id`";
-		}else{
-			$sql = "SELECT tb_kategori.`nm_kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_item` 
-			LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` GROUP BY tb_kategori.`id`";
-        }
-        
-    echo $sql;
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`date`) BETWEEN '$start' AND '$end' GROUP BY tb_kategori.`id`";
+	}elseif($start!=null&&$end==null){
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` WHERE DATE(`date`)='$start' GROUP BY tb_kategori.`id`";
+	}else{
+		$sql = "SELECT tb_kategori.`kategori`, SUM(tb_transaksi.`total_price`) AS total FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.`id`=tb_transaksi.`id_menu` 
+		LEFT JOIN tb_kategori ON tb_kategori.`id`=tb_menu.`kategori` GROUP BY tb_kategori.`id`";
+	}
 	//$sql = "SELECT * FROM tb_transaksi INNER JOIN tb_menu ON tb_menu.id=tb_transaksi.id_menu INNER JOIN tb_employee ON tb_employee.id=tb_transaksi.id_employee";
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
@@ -195,14 +303,22 @@ $header = array('Category', 'Total Penjualan' );
 		$pdf->SetFont('Arial','',9);
 		$pdf->AddPage();
 		$pdf->FancyTable($header,$data);
-		$pdf->Output('I',date('Y-m-d').".pdf");
-	} else {
+		$filename="Pajak".date('Y-m-d').".pdf";
+		$pdf->Output('F',$filename);
+		$file = $filename;
+		$filename = $filename;
+		header('Content-type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $filename . '"');
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Length: ' . filesize($file));
+		header('Accept-Ranges: bytes');
+		@readfile($file);
+		//header("location:report.php");
+	} 
+	else {
 		$_SESSION["message"]="No Data to Report";
-		header("location:../backend/report.php");
-		}
-}
-
-
-	
+		header("location:report.php");
+	}
+}*/
 //header("location:mainMenu.php")
 ?>

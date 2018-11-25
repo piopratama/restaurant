@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $title="Report";
 
 if(empty($_SESSION['username'])){
@@ -18,6 +17,8 @@ else
 }
 include_once '../koneksi.php';
 $barang = mysqli_query($conn, "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status` as statuss, method FROM tb_transaksi;");
+
+
 $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 ?>
 <!DOCTYPE html>
@@ -25,6 +26,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 
 
 	<?php include("../layout/headercasier.php"); ?>
+	<!--<link rel="stylesheet" type="text/css" href="../css/stockStyle.css">-->
 		
 	<link rel="stylesheet" href="../assets/jquery-ui.css">
 	<style>
@@ -39,7 +41,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 
 	<body>
 		
-		<form action="../process/finishReport.php" method="POST">
+		<form action="../process/finishReport.php" method="POST" accept-charset="utf-8">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12 header">
@@ -64,7 +66,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 									</ul> -->
 									
 									<ul class="nav navbar-nav navbar-right">
-										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px;" href="../logout.php">Logout</a></li>
+										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px;" href="logout.php">Logout</a></li>
 										<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
 										
 										<!-- <li class="">
@@ -90,7 +92,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 					<div class="col-md-12" id="mytable">
 					<table id="example" class="table table-bordered" style="width: 100%;">
 						
-						<a href="dashboard.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
+						<a href="administrator.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
 						<div style="border-bottom:1px solid #bcbaba; margin-bottom:10px; background-color:#b5b2ac; padding:0 0 0 10px">
 							Start: <input style="margin:10px; " type="date" name="start" id="date_start">
 							Until: <input style="margin:10px;" type="date" name="end" id="date_end">
@@ -106,8 +108,8 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 								<option value="<?php ?>"><?php echo $pelanggan[0]?></option>
 							<?php }?>
 							</select>
-							<input type="submit" class="btn btn-success glyphicon glyphicon-print" style="margin:10px 0 10px 0" name="Submit" value="Print">
-							<input type="submit" class="btn btn-success glyphicon glyphicon-print" style="margin:10px 0 10px 10px; " name="Submit" value="Pajak">
+							<input type="submit" class="btn btn-success glyphicon glyphicon-print" style="margin:10px 0 10px 0" name="Submit" value="Print"></button>
+							<input type="submit" class="btn btn-success glyphicon glyphicon-print" style="margin:10px 0 10px 10px; " name="Submit" value="Pajak"></i></button>
 						</div>
 						
 						<h1> TABEL REPORT</h1>
@@ -349,11 +351,12 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 					if(status!="" && startDate!="" && stopDate!="")
 					{
 						$.ajax({
-							url: 'getStatusCustomer.php',
+							url: '../process/getStatusCustomer.php',
 							type: 'post',
 							data: {status: status, dateStart: startDate, dateStop: stopDate},
 							dataType: 'text',
 							success: function (data) {
+								console.log(data);
 								$("#customer").html(data);
 								//oTable.fnClearTable();
 								
@@ -383,7 +386,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 					var stopDate=$("#date_end").val();
 					var customer=$("#customer").val();
 					$.ajax({
-						url: 'getTableStatusCustomer.php',
+						url: '../process/getTableStatusCustomer.php',
 						type: 'post',
 						data: {status: status, dateStart: startDate, dateStop: stopDate, customer: customer},
 						dataType: 'json',
