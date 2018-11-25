@@ -18,14 +18,29 @@
     $startDate=$_POST['dateStart'];
     $stopDate=$_POST['dateStop'];
     $customer=$_POST['customer'];
+
+    if($status=='1')
+    {
+        $status='paid';
+    }
+    else if($status=='0')
+    {
+        $status='not paid';
+    }
+    else
+    {
+        $status="";
+    }
+
+
     require '../koneksi.php';
     if($customer!="" && $startDate!="" && $stopDate!="" && $status!="")
     {
-        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status`, method FROM tb_transaksi WHERE status=".$status." and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."' and customer as customer='".$customer."';";
+        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status`, method FROM tb_transaksi WHERE `status`='".$status."' and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."' and customer='".$customer."';";
     }
     else if($startDate!="" && $stopDate!="" && $status!="")
     {
-        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status`, method FROM tb_transaksi WHERE status=".$status." and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."';";
+        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status`, method FROM tb_transaksi WHERE `status`='".$status."' and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."';";
     }
     else if($startDate!="" && $stopDate!="")
     {
@@ -33,11 +48,11 @@
     }
     else if($status!="")
     {
-        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, status, method FROM tb_transaksi WHERE `status`=".$status.";";
+        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, status, method FROM tb_transaksi WHERE `status`='".$status."';";
     }
     else
     {
-        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, status, method FROM tb_transaksi;";
+        $sql = "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status`, method FROM tb_transaksi;";
     }
     //$sql = "SELECT invoice, customer as nm_transaksi FROM tb_transaksi WHERE status=".$status." and customer as nm_transaksi<>'' and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."' and customer as nm_transaksi='".$customer as nm_transaksi."';";
     $result = $conn->query($sql);
@@ -50,7 +65,7 @@
         while($row = $result->fetch_assoc()){
             $data[$i]["no"]=($i+1);
             $data[$i]["invoice"]=$row["invoice"];
-            $data[$i]["customer as nm_transaksi"]=($row["customer as nm_transaksi"]=="" ? "Direct Pay":$row["customer as nm_transaksi"]);
+            $data[$i]["nm_transaksi"]=($row["nm_transaksi"]=="" ? "Direct Pay":$row["nm_transaksi"]);
             $data[$i]["tnggl"]=$row["tnggl"];
             $data[$i]["nama_pegawai"]=$row["nama_pegawai"];
             $data[$i]["item"]=$row["item"];

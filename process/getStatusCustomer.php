@@ -17,9 +17,24 @@
     $status=$_POST['status'];
     $startDate=$_POST['dateStart'];
     $stopDate=$_POST['dateStop'];
+
+    if($status=='1')
+    {
+        $status='paid';
+    }
+    elseif($status=='0')
+    {
+        $status='not paid';
+    }
+    else
+    {
+        $status="";
+    }
+
+
 	require '../koneksi.php';
     //$sql = "SELECT invoice, nm_transaksi, tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_barang WHERE id=id_item )AS item, qty, total_price, statuss FROM tb_transaksi WHERE statuss=".$status." and nm_transaksi<>'';";
-    $sql = "SELECT invoice, customer as nm_transaksi FROM tb_transaksi WHERE `status`=".$status." and customer<>'' and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."';";
+    $sql = "SELECT invoice, customer as nm_transaksi FROM tb_transaksi WHERE `status`='".$status."' and customer<>'' and Date(`date`)>='".$startDate."' and Date(`date`)<='".$stopDate."';";
     $result = $conn->query($sql);
 
     $data=array();
