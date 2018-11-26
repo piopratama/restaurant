@@ -26,7 +26,7 @@ $status = $_POST['status'];
 if($meja!="")
 {
     $myInvoice = mysqli_query($conn, "Select invoice from tb_transaksi where customer='".$customer."' and id_meja=".$meja." and `status`='not paid'");
-
+    
     if($myInvoice->num_rows>0)
     {
         while($row=$myInvoice->fetch_assoc())
@@ -35,12 +35,15 @@ if($meja!="")
         }
         mysqli_query($conn, "delete from tb_transaksi where invoice='".$invoice."'");
     }
+    else
+    {
+        $invoice=Date('Y-m-d H:i:s')."".$_SESSION["id_kasir"];
+    }
 }
 else
 {
     $invoice=Date('Y-m-d H:i:s')."".$_SESSION["id_kasir"];
 }
-echo $invoice;
 $value="";
 
 for($i=0;$i<count($data);$i++)
@@ -71,7 +74,7 @@ for($i=0;$i<count($data);$i++)
 
 
 $sql = mysqli_query($conn, "INSERT INTO tb_transaksi(`invoice`, `date`, `date_insert`, `customer`, `id_employee`, `id_menu`, `id_meja`, `qty`, `price`, `total_price`, `rest_total`, `method`, `description`, `status`, `method_order`) values".$value."");
-
+echo "INSERT INTO tb_transaksi(`invoice`, `date`, `date_insert`, `customer`, `id_employee`, `id_menu`, `id_meja`, `qty`, `price`, `total_price`, `rest_total`, `method`, `description`, `status`, `method_order`) values".$value."";
 if ($conn->query($sql) === TRUE) {
     $_SESSION['message']="Insert Successfully";
 } else {

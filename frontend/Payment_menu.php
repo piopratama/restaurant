@@ -508,6 +508,7 @@
                             data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: "paid",method:$("#method").val()},
                             dataType: "text",
                             success: function (response) {
+                                console.log(response);
                                 $("#message").html("Insert Successfully");
                                 $("#exampleModal2").modal('show');
                             },
@@ -521,6 +522,13 @@
 
                 var printer = new Recta('3245260761', '1811');
                 var data = new Array();
+                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                    var qty=$(this).next().val();
+                    var price=$(this).prev().val();
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
+                    data.push(dataObject);
+                });
+
                 $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                     var qty=$(this).next().val();
                     var price=$(this).prev().val();
@@ -544,32 +552,40 @@
                     .bold(true); 
                     printer.text("");
                     printer.text("Food");
+                    printer.text("Item (Qty)");
+                    printer.text("Price     Total Price");
+                    printer.text("");
                     for(var j=0;j<data.length;j++)
                     {
                         if(data[j].type=="1" || data[j].type=="food")
                         {
                             printer.text(data[j].itemName);
-                            printer.text(data[j].qty+"       "+data[j].price+"     "+data[j].total);
+                            printer.text(data[j].price+"     "+data[j].total);
                             printer.text("");
                         }
                     }
                     printer.text("");
                     printer.text("Bevarage");
+                    printer.text("Item (Qty)");
+                    printer.text("Price    Total Price");
+                    printer.text("");
                     for(var j=0;j<data.length;j++)
                     {
                         if(data[j].type=="2" || data[j].type=="beverage")
                         {
                             printer.text(data[j].itemName);
-                            printer.text(data[j].qty+"       "+data[j].price+"     "+data[j].total);
+                            printer.text(data[j].price+"     "+data[j].total);
                             printer.text("");
                         }
                     }
                     printer.bold(true);
                     printer.text("------------------------------")
-                    .text($("#description").val())
                     .text("Total   :" + $("#total").val())
                     .text("Payment :" + $("#payment").val())
                     .text("Change  :" + $("#change").val())
+                    .text("")
+                    .text("Description :")
+                    .text($("#description").val())
                     .cut()
                     .print();
                 });

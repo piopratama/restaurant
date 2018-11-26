@@ -92,7 +92,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 					<div class="col-md-12" id="mytable">
 					<table id="example" class="table table-bordered" style="width: 100%;">
 						
-						<a href="administrator.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
+						<a href="../backend/dashboard.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
 						<div style="border-bottom:1px solid #bcbaba; margin-bottom:10px; background-color:#b5b2ac; padding:0 0 0 10px">
 							Start: <input style="margin:10px; " type="date" name="dateStart" id="date_start">
 							Until: <input style="margin:10px;" type="date" name="dateStop" id="date_end">
@@ -141,14 +141,7 @@ $user = mysqli_query($conn, "SELECT * FROM tb_employee");
 								<td><?php echo $data["qty"];?></td>
 								<td><?php echo $data["total_price"];?></td>
 								<td><?php echo $data["method"] ;?></td>
-								<td><?php if($data["statuss"]==0)
-								{
-									echo("not paid");
-								}
-								else{
-									echo("paid");
-								}
-								?></td>
+								<td><?php echo $data["statuss"]; ?></td>
 							</tr>
 							<?php $no++; }?>							
 						</tbody>

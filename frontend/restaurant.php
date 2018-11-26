@@ -559,6 +559,8 @@
                     .text()
                     .bold(true);
                     printer.text("Food");
+                    printer.text("Item"+"(Qty)");
+                    printer.text("");
                     for(var j=0;j<data.length;j++)
                     {
                         if(data[j].type=="1" || data[j].type=="food")
@@ -569,6 +571,8 @@
                     }
                     printer.text("");
                     printer.text("Bevarage");
+                    printer.text("Item"+"(Qty)");
+                    printer.text("");
                     for(var j=0;j<data.length;j++)
                     {
                         if(data[j].type=="2" || data[j].type=="beverage")

@@ -33,6 +33,10 @@ if($meja!="")
         }
         mysqli_query($conn, "delete from tb_transaksi where invoice='".$invoice."'");
     }
+    else
+    {
+        $invoice=Date('Y-m-d H:i:s')."".$_SESSION["id_kasir"];
+    }
 }
 else
 {
