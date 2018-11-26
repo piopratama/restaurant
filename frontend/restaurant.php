@@ -342,11 +342,14 @@
     <?php 
         $session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
         unset($_SESSION['message']);
+        
+        $pelayan=(isset($_SESSION['nama']))?$_SESSION['nama']:'';
     ?>
     <?php include('../layout/footercasier.php'); ?>
     <script>
         $(document).ready(function () {
             var total=0;
+            var pelayan="<?php echo $pelayan; ?>";
             $("#customer_table").select2();
             $("#search_menu").select2();
             
@@ -548,19 +551,13 @@
                     .text('RESTAURANT')
                     .bold(true)
                     .text($("#date").val())	
+                    .text("Waitrees :" + pelayan)
                     .text("Name  :" + $("#customer_name").val())
                     .text("Table :" + $("#customer_table").val())	
                     .text('------------------------------')
                     printer.align('left')
                     .text()
                     .bold(true);
-                    
-                    
-                    i=0;
-                    printer.text("Item").bold(true);
-                    printer.text("Qty     Price(Rp)     Total(Rp)")
-                    .bold(true);
-                    printer.text("");
                     printer.text("Food");
                     for(var j=0;j<data.length;j++)
                     {
@@ -582,6 +579,8 @@
                     }
                     printer.bold(true);
                     printer.text("------------------------------")
+                    .text("")
+                    .text("Description :")
                     .text($("#description").val())
                     .cut()
                     .print();

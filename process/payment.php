@@ -40,7 +40,7 @@ else
 {
     $invoice=Date('Y-m-d H:i:s')."".$_SESSION["id_kasir"];
 }
-
+echo $invoice;
 $value="";
 
 for($i=0;$i<count($data);$i++)

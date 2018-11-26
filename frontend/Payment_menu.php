@@ -22,6 +22,7 @@
 
     $sql2 = "SELECT id, item, price, kategori FROM tb_menu where `status`='yes';";
     $data_menu = $conn->query($sql2);
+
 ?>
 <body>
 <div class="container-fluid">
@@ -324,11 +325,14 @@
     <?php 
         $session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
         unset($_SESSION['message']);
+
+        $pelayan=(isset($_SESSION['nama']))?$_SESSION['nama']:'';
     ?>
     <?php include('../layout/footercasier.php'); ?>
     <script>
         $(document).ready(function () {
             var total=0;
+            var pelayan="<?php echo $pelayan; ?>";
             $("#customer_table").select2();
             $("#search_menu").select2();
             
@@ -504,7 +508,6 @@
                             data: {data: JSON.stringify(data), customer: $("#customer_name").val(), meja: $("#customer_table").val(), description: $("#description").val(), total: $("#total").val(), payment: $("#payment").val(), change: $('#change').val(), status: "paid",method:$("#method").val()},
                             dataType: "text",
                             success: function (response) {
-                                console.log(response);
                                 $("#message").html("Insert Successfully");
                                 $("#exampleModal2").modal('show');
                             },
@@ -518,7 +521,7 @@
 
                 var printer = new Recta('3245260761', '1811');
                 var data = new Array();
-                $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
+                $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                     var qty=$(this).next().val();
                     var price=$(this).prev().val();
                     var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
@@ -531,19 +534,14 @@
                     .text('RESTAURANT')
                     .bold(true)
                     .text($("#date").val())	
+                    .text("Casier :" + pelayan)
                     .text("Name  :" + $("#customer_name").val())
                     .text("Table :" + $("#customer_table").val())
                     .text("Method :" + $("#method").val())	
                     .text('------------------------------')
                     printer.align('left')
                     .text()
-                    .bold(true);
-                    
-                    
-                    i=0;
-                    printer.text("Item").bold(true);
-                    printer.text("Qty     Price(Rp)     Total(Rp)")
-                    .bold(true);
+                    .bold(true); 
                     printer.text("");
                     printer.text("Food");
                     for(var j=0;j<data.length;j++)
@@ -568,6 +566,7 @@
                     }
                     printer.bold(true);
                     printer.text("------------------------------")
+                    .text($("#description").val())
                     .text("Total   :" + $("#total").val())
                     .text("Payment :" + $("#payment").val())
                     .text("Change  :" + $("#change").val())
