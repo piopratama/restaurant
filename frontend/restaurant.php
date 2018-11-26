@@ -546,7 +546,7 @@
                     }
                     printer.bold(true);
                     printer.text("------------------------------")
-                    .text($("#description").text())
+                    .text($("#description").val())
                     .cut()
                     .print();
                 });
