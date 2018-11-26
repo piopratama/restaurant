@@ -72,13 +72,7 @@
             $data[$i]["qty"]=$row["qty"];
             $data[$i]["total_price"]=$row["total_price"];
             $data[$i]["method"]=$row["method"];
-            if($row["status"]==1)
-            {
-                $data[$i]["status"]="paid";
-            }
-            else if($row["status"]==0){
-                $data[$i]["status"]="not paid";
-            }
+            $data[$i]["status"]=$row["status"];
             $i=$i+1;
         }
         echo json_encode($data);
