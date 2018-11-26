@@ -1,28 +1,47 @@
 <?php
-    session_start();
-    if(empty($_SESSION['username'])){
-        header("location:..");
-    }
-    else
-    {
-        if(!empty($_SESSION['level_user']))
-        {
-            if($_SESSION["level_user"]==0)
-            {
-                header("location:../index.php");
-            }
-        }
-    }
-    $title="Report";
-    include('../layout/headercasier.php');
-    require('../koneksi.php');
+session_start();
+$title="Report";
 
-    $transaksi = mysqli_query($conn, "SELECT customer, date, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama, (SELECT item FROM tb_menu WHERE id=id_menu ) AS item, qty, total_price, status FROM tb_transaksi;");
-    //$user = mysqli_query($conn, "SELECT * FROM tb_employee");
+if(empty($_SESSION['username'])){
+	header("location:..");
+}
+else
+{
+	if(!empty($_SESSION['level_user']))
+	{
+		if($_SESSION["level_user"]==0 || $_SESSION["level_user"]==2)
+		{
+			header("location:..");
+		}
+	}
+}
+include_once '../koneksi.php';
+$barang = mysqli_query($conn, "SELECT invoice, customer as nm_transaksi, Date(`date`) as tnggl, (SELECT nama FROM tb_employee WHERE id=id_employee) AS nama_pegawai, (SELECT item FROM tb_menu WHERE id=id_menu )AS item, qty, total_price, `status` as statuss, method FROM tb_transaksi;");
+
+
+$user = mysqli_query($conn, "SELECT * FROM tb_employee");
 ?>
+<!DOCTYPE html>
+<html>
 
-    <body>
-		<form action="finishReport.php" method="POST" accept-charset="utf-8">
+
+	<?php include("../layout/headercasier.php"); ?>
+	<!--<link rel="stylesheet" type="text/css" href="../css/stockStyle.css">-->
+		
+	<link rel="stylesheet" href="../assets/jquery-ui.css">
+	<style>
+	.ct-label {
+		font-size: 12px;
+	}
+
+	#chart-div {
+		margin-top: 50px;
+	}
+	</style>
+
+	<body>
+		
+		<form action="../process/finishReport.php" method="POST" accept-charset="utf-8">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12 header">
@@ -38,9 +57,27 @@
 									</button>
 									<a class="navbar-brand" style="font-size: 40px;" href="#">Deli Shop</a>
 								</div>
+						
+								<!-- Collect the nav links, forms, and other content for toggling -->
+								<div class="collapse navbar-collapse navbar-ex1-collapse">
+									<!-- <ul class="nav navbar-nav">
+										<li class="active"><a href="#">Link</a></li>
+										<li><a href="#">Link</a></li>
+									</ul> -->
+									
 									<ul class="nav navbar-nav navbar-right">
 										<li><a type="button" class="btn btn-danger" style="margin: 10px; padding: 10px;" href="logout.php">Logout</a></li>
 										<li><a href=""><!-- <?php  echo $_SESSION['username'];  ?> --> </a></li>
+										
+										<!-- <li class="">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+											<ul class="dropdown-menu">
+												<li><a href="#">Action</a></li>
+												<li><a href="#">Another action</a></li>
+												<li><a href="#">Something else here</a></li>
+												<li><a href="#">Separated link</a></li>
+											</ul>
+										</li> -->
 									</ul>
 								</div><!-- /.navbar-collapse -->
 							</div>
@@ -57,14 +94,14 @@
 						
 						<a href="administrator.php" style="margin-left: 5px; margin-bottom: 10px;" type="button" class="btn btn-danger glyphicon glyphicon-arrow-left" ></a><br>
 						<div style="border-bottom:1px solid #bcbaba; margin-bottom:10px; background-color:#b5b2ac; padding:0 0 0 10px">
-							Start: <input style="margin:10px; " type="date" name="start" id="date_start">
-							Until: <input style="margin:10px;" type="date" name="end" id="date_end">
-							<!--Status: <select style="margin:10px; width:150px;height:28px" id="status_paid">
-								<option>--Select Status--</option>
+							Start: <input style="margin:10px; " type="date" name="dateStart" id="date_start">
+							Until: <input style="margin:10px;" type="date" name="dateStop" id="date_end">
+							Status: <select style="margin:10px; width:150px;height:28px" id="status_paid" name="status">
+								<option value="">--Select Status--</option>
 								<option value="1">Paid</option>
 								<option value="0">Unpaid</option>
-							</select>-->
-							Customer: <select style="margin:10px; width:150px;height:28px" id="customer">
+							</select>
+							Customer: <select style="margin:10px; width:150px;height:28px" id="customer" name="customer">
 							<?php while($pelanggan=mysqli_fetch_array($customer)){?>
 								<option>--Select Customer--</option>
 								
@@ -79,28 +116,39 @@
 						<thead>
 							<tr>
 								<th>ID</th>
+								<th>Invoice</th>
 								<th>Name</th>
 								<th>Date</th>
 								<th>ID user</th>
 								<th>Item</th>
 								<th>QTY</th>
 								<th>Total Price</th>
+								<th>Method</th>
 								<th>Status</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php 
 							$no=1;
-                            foreach ($transaksi as $data) {?>
+							foreach ($barang as $data) {?>
 							<tr>
 								<td><?php echo $no ?></td>
-								<td><?php echo $data["customer"];?></td>
-								<td><?php echo $data["date"];?></td>
-								<td><?php echo $data["nama"];?></td>
+								<td><?php echo $data["invoice"];?></td>
+								<td><?php echo ($data["nm_transaksi"]=="" ? "Direct Pay": $data["nm_transaksi"]);?></td>
+								<td><?php echo $data["tnggl"];?></td>
+								<td><?php echo $data["nama_pegawai"];?></td>
 								<td><?php echo $data["item"];?></td>
 								<td><?php echo $data["qty"];?></td>
 								<td><?php echo $data["total_price"];?></td>
-								<td><?php echo $data["status"];?></td>
+								<td><?php echo $data["method"] ;?></td>
+								<td><?php if($data["statuss"]==0)
+								{
+									echo("not paid");
+								}
+								else{
+									echo("paid");
+								}
+								?></td>
 							</tr>
 							<?php $no++; }?>							
 						</tbody>
@@ -111,7 +159,7 @@
 							<input type="text" class="form-control" id="year">
 						</div>
 						<button class="btn btn-primary" id="chartBtn">Submit</button>
-						<h3 class="text-center" id="title-chart" style="display: none;">Profit Chart (in K Rupiah)</h3>
+						<h3 class="text-center" id="title-chart" style="display: none;">Transaction Chart (in K Rupiah)</h3>
 						<div class="ct-chart ct-perfect-fourth"></div>
 					</div>
 				</div>
@@ -150,7 +198,7 @@
 					$("#title-chart").show();
 					
 					$.ajax({
-						url: "grafik.php",
+						url: "../process/grafik.php",
 						method: 'POST',
 						data: {year : $("#year").val()},
 						dataType: 'json',
@@ -277,18 +325,21 @@
 
 				$("#status_paid").change(function(){
 					getCustomerStatus();
+					getTableCustomerStatus();
 				});
 
 				$("#customer").change(function(){
 					getTableCustomerStatus();
 				});
 				
-				$("##date_start").change(function(){
+				$("#date_start").change(function(){
 					getCustomerStatus();
+					getTableCustomerStatus();
 				});
 
-				$("##date_stop").change(function(){
+				$("#date_end").change(function(){
 					getCustomerStatus();
+					getTableCustomerStatus();
 				});
 
 				function getCustomerStatus()
@@ -300,7 +351,7 @@
 					if(status!="" && startDate!="" && stopDate!="")
 					{
 						$.ajax({
-							url: 'getStatusCustomer.php',
+							url: '../process/getStatusCustomer.php',
 							type: 'post',
 							data: {status: status, dateStart: startDate, dateStop: stopDate},
 							dataType: 'text',
@@ -333,15 +384,14 @@
 					var startDate=$("#date_start").val();
 					var stopDate=$("#date_end").val();
 					var customer=$("#customer").val();
-					
-					if(status!="" && startDate!="" && stopDate!="")
-					{
-						$.ajax({
-							url: 'getTableStatusCustomer.php',
-							type: 'post',
-							data: {status: status, dateStart: startDate, dateStop: stopDate, customer: customer},
-							dataType: 'json',
-							success: function (data) {
+					$.ajax({
+						url: '../process/getTableStatusCustomer.php',
+						type: 'post',
+						data: {status: status, dateStart: startDate, dateStop: stopDate, customer: customer},
+						dataType: 'json',
+						success: function (data) {
+							if(data!=[])
+							{
 								oTable.fnClearTable();
 								for(var i=0;i<data.length;i++)
 								{
@@ -354,12 +404,13 @@
 										data[i].item,
 										data[i].qty,
 										data[i].total_price,
+										data[i].method,
 										data[i].status
 									]);
 								}
 							}
-						});
-					}
+						}
+					});
 				}
 			});
 		</script>

@@ -28,7 +28,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			header("location:../backend/dashboard.php");
 			}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 			}
 	}
 	elseif ($b=='0'){
@@ -45,7 +45,7 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 			header("location:../frontend/restaurant.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 		}
 	}
 	elseif ($b=='2'){
@@ -57,12 +57,12 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 				$_SESSION["username"]=$usernamed;
 	        	$_SESSION["id_kasir"]=$row["id"];
 			}
-			$_SESSION['level_user']=0;
+			$_SESSION['level_user']=2;
 			$sql1 = mysqli_query($conn, "update tb_employee set online_status='1' where username='$usernamed'");
-			header("location:../frontend/payment_menu.php");
+			header("location:../frontend/main_menu.php");
 		}else{
 			$_SESSION["message"]="Login Failed";
-			header("location:index.php");
+			header("location:..");
 		}
 	}
 	
@@ -72,6 +72,6 @@ if(isset($_POST["username"]) && isset($_POST["password"]))
 else
 {
 	$_SESSION["message"]="Login Failed";
-	header("location:index.php");
+	header("location:..");
 }
 ?>

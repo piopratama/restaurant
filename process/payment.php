@@ -9,7 +9,7 @@ else
     {
         if($_SESSION["level_user"]==1)
         {
-            header("location:index.php");
+            header("location:..");
         }
     }
 }
