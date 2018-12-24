@@ -63,6 +63,82 @@
 				<div class="col-md-4"></div>
 			</div>
 		</div>
+		<?php 
+			$session_value=(isset($_SESSION['message']))?$_SESSION['message']:'';
+			unset($_SESSION['message']);
+
+			$pelayan=(isset($_SESSION['nama']))?$_SESSION['nama']:'';
+			$level_user=(isset($_SESSION["level_user"]))?$_SESSION["level_user"]:'';
+		?>
 		<?php include('../layout/footercasier.php');?>
+		<script>
+			$(document).ready(function () {
+				var total=0;
+				var pelayan="<?php echo $pelayan; ?>";
+				var level_user="<?php echo $level_user; ?>";
+
+				var conn = new WebSocket('ws://localhost:8080');
+				conn.onopen = function(e) {
+					console.log("Connection established!");
+				};
+
+				conn.onmessage = function(e) {
+					console.log(e.data);
+					if(level_user!="" && level_user!="0")
+					{
+						printer(JSON.parse(e.data));
+					}
+				};
+
+				function printer(data)
+				{
+					var printer = new Recta('3245260761', '1811');
+					printer.open().then(function () {
+						var x=[];
+						printer.align('center')	
+						.text('RESTAURANT')
+						.bold(true)
+						.text($("#date").val())	
+						.text("Waitrees :" + pelayan)
+						.text("Name  :" + $("#customer_name").val())
+						.text("Table :" + $("#customer_table").val())	
+						.text('------------------------------')
+						printer.align('left')
+						.text()
+						.bold(true);
+						printer.text("Food");
+						printer.text("Item"+"(Qty)");
+						printer.text("");
+						for(var j=0;j<data.length;j++)
+						{
+							if(data[j].type=="1" || data[j].type=="food")
+							{
+								printer.text(data[j].itemName);
+								printer.text("");
+							}
+						}
+						printer.text("");
+						printer.text("Bevarage");
+						printer.text("Item"+"(Qty)");
+						printer.text("");
+						for(var j=0;j<data.length;j++)
+						{
+							if(data[j].type=="2" || data[j].type=="beverage")
+							{
+								printer.text(data[j].itemName);
+								printer.text("");
+							}
+						}
+						printer.bold(true);
+						printer.text("------------------------------")
+						.text("")
+						.text("Description :")
+						.text($("#description").val())
+						.cut()
+						.print();
+					});
+				}
+			});
+		</script>
 	</body>
 </html>

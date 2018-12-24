@@ -327,12 +327,14 @@
         unset($_SESSION['message']);
 
         $pelayan=(isset($_SESSION['nama']))?$_SESSION['nama']:'';
+        $level_user=(isset($_SESSION["level_user"]))?$_SESSION["level_user"]:'';
     ?>
     <?php include('../layout/footercasier.php'); ?>
     <script>
         $(document).ready(function () {
             var total=0;
             var pelayan="<?php echo $pelayan; ?>";
+            var level_user="<?php echo $level_user; ?>";
             $("#customer_table").select2();
             $("#search_menu").select2();
             
@@ -341,6 +343,19 @@
             {
                 $("#exampleModal2").modal('show');
             }*/
+
+            var conn = new WebSocket('ws://localhost:8080');
+            conn.onopen = function(e) {
+                console.log("Connection established!");
+            };
+
+            conn.onmessage = function(e) {
+                console.log(e.data);
+                if(level_user!="" && level_user!="0")
+                {
+                    printer(JSON.parse(e.data));
+                }
+            };
 
             $(".menuWrapper").on('click', '.addMenuOrder', function(){
                 var qty=$(this).parent().prev().find('.qty').val();
@@ -520,7 +535,6 @@
                     }
                 }
 
-                var printer = new Recta('3245260761', '1811');
                 var data = new Array();
                 $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
                     var qty=$(this).next().val();
@@ -536,6 +550,20 @@
                     data.push(dataObject);
                 });
 
+                if(level_user!="" && level_user!="0")
+                {
+                    printer(data);
+                }
+                else
+                {
+                    conn.send(JSON.stringify(data));
+                }
+                
+            });
+
+            function printer(data)
+            {
+                var printer = new Recta('3245260761', '1811');                
                 printer.open().then(function () {
                     var x=[];
                     printer.align('center')	
@@ -589,7 +617,7 @@
                     .cut()
                     .print();
                 });
-            });
+            }
             
             $("#customer_table").change(function(){
                 search_payment();
