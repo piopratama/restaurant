@@ -353,7 +353,7 @@
                 console.log(e.data);
                 if(level_user!="" && level_user!="0")
                 {
-                    printer(JSON.parse(e.data));
+                    printerOrder(JSON.parse(e.data));
                 }
             };
 
@@ -546,7 +546,7 @@
                 $(".menuWrapperOrderHistory .idItem").each(function(indexInArray, valueOfElement){
                     var qty=$(this).next().val();
                     var price=$(this).prev().val();
-                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price, pelayan: pelayan, cust_table: $("#customer_table").val(), cust_name: $("#customer_name").val()};
                     data.push(dataObject);
                 });
 
@@ -560,6 +560,65 @@
                 }
                 
             });
+            
+            function printerOrder(data)
+            {
+                var printer = new Recta('3245260761', '1811');
+                printer.open().then(function () {
+                    var x=[];
+                    var pelayan="";
+                    var cust_table="";
+                    var cust_name="";
+                    if(data.length>0)
+                    {
+                        pelayan=data[0].pelayan;
+                        cust_table=data[0].cust_table;
+                        cust_name=data[0].cust_name;
+                    }
+
+                    printer.align('center')	
+                    .text('RESTAURANT')
+                    .bold(true)
+                    .text($("#date").val())	
+                    .text("Waitrees :" + pelayan)
+                    .text("Name  :" + cust_name)
+                    .text("Table :" + cust_table)	
+                    .text('------------------------------')
+                    printer.align('left')
+                    .text()
+                    .bold(true);
+                    printer.text("Food");
+                    printer.text("Item"+"(Qty)");
+                    printer.text("");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="1" || data[j].type=="food")
+                        {
+                            printer.text(data[j].itemName);
+                            printer.text("");
+                        }
+                    }
+                    printer.text("");
+                    printer.text("Bevarage");
+                    printer.text("Item"+"(Qty)");
+                    printer.text("");
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(data[j].type=="2" || data[j].type=="beverage")
+                        {
+                            printer.text(data[j].itemName);
+                            printer.text("");
+                        }
+                    }
+                    printer.bold(true);
+                    printer.text("------------------------------")
+                    .text("")
+                    .text("Description :")
+                    .text($("#description").val())
+                    .cut()
+                    .print();
+                });
+            }
 
             function printer(data)
             {
