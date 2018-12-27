@@ -556,7 +556,7 @@
                 $(".menuWrapperOrder .idItem").each(function(indexInArray, valueOfElement){
                     var qty=$(this).next().val();
                     var price=$(this).prev().val();
-                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price};
+                    var dataObject={id:$(this).val(),type: $(this).prev().prev().val(), qty: $(this).next().val(), price: $(this).prev().val(), itemName: $(this).parent().parent().prev().prev().prev().text(), total: qty*price, pelayan: pelayan, cust_table: $("#customer_table").val(), cust_name: $("#customer_name").val()};
                     data.push(dataObject);
                 });
 
@@ -576,13 +576,23 @@
                 var printer = new Recta('3245260761', '1811');
                 printer.open().then(function () {
                     var x=[];
+                    var pelayan="";
+                    var cust_table="";
+                    var cust_name="";
+                    if(data.length>0)
+                    {
+                        pelayan=data[0].pelayan;
+                        cust_table=data[0].cust_table;
+                        cust_name=data[0].cust_name;
+                    }
+
                     printer.align('center')	
                     .text('RESTAURANT')
                     .bold(true)
                     .text($("#date").val())	
                     .text("Waitrees :" + pelayan)
-                    .text("Name  :" + $("#customer_name").val())
-                    .text("Table :" + $("#customer_table").val())	
+                    .text("Name  :" + )
+                    .text("Table :" + )	
                     .text('------------------------------')
                     printer.align('left')
                     .text()
