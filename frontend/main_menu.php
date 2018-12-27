@@ -95,13 +95,23 @@
 					var printer = new Recta('3245260761', '1811');
 					printer.open().then(function () {
 						var x=[];
-						printer.align('center')	
+						var pelayan="";
+                    var cust_table="";
+                    var cust_name="";
+                    if(data.length>0)
+                    {
+                        pelayan=data[0].pelayan;
+                        cust_table=data[0].cust_table;
+                        cust_name=data[0].cust_name;
+                    }
+
+                    printer.align('center')	
 						.text('RESTAURANT')
 						.bold(true)
 						.text($("#date").val())	
 						.text("Waitrees :" + pelayan)
-						.text("Name  :" + $("#customer_name").val())
-						.text("Table :" + $("#customer_table").val())	
+						.text("Name  :" + cust_name)
+						.text("Table :" + cust_table)	
 						.text('------------------------------')
 						printer.align('left')
 						.text()
