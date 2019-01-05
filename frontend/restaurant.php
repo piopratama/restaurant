@@ -361,7 +361,7 @@
                 $("#exampleModal2").modal('show');
             }*/
 
-            var conn = new WebSocket('ws://localhost:8080');
+            var conn = new WebSocket('ws://192.168.0.101:8080');
             conn.onopen = function(e) {
                 console.log("Connection established!");
             };

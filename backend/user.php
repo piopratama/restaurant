@@ -85,7 +85,7 @@
 									<td><?php echo $data["username"];?></td>
 									<td><?php echo $data["password"];?></td>
 									<td>
-										<a type="button" class="btn btn-danger" onclick="return confirm('Are you sure?')" href="../process/delete_user.php?id=<?php echo $data['id']?>">Delete</a>
+										<a type="button" class="btn btn-danger" onclick="return confirm('Are you sure?')" href="../process/delete_user.php?id=<?php echo $data['id']?>"><span class="glyphicon glyphicon-trash"></span></a></a>
 										<a type="button" class="btn btn-success" href="../process/edit_user.php?id=<?php echo $data['id']?>"><span class="glyphicon glyphicon-pencil"></span></a>
 									</td>
 								</tr>

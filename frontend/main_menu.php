@@ -77,7 +77,7 @@
 				var pelayan="<?php echo $pelayan; ?>";
 				var level_user="<?php echo $level_user; ?>";
 
-				var conn = new WebSocket('ws://localhost:8080');
+				var conn = new WebSocket('ws:/192.168.0.101:8080');
 				conn.onopen = function(e) {
 					console.log("Connection established!");
 				};

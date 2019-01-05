@@ -80,10 +80,10 @@
 										<td><?php echo $data["kategori"];?></td>
 										<td><?php echo $data["stock"];?></td>
 										
-										<td><img src="../assets/img/<?php echo $data['img_path'] ?>" alt="<?php echo $data['item']; ?>" width="100" height="73"></td>
+										<td><img src="../assets/img/<?php echo $data['id'] ?>.jpg" alt="<?php echo $data['item']; ?>" width="100" height="73"></td>
 			
-										<td><a type="button" class="btn btn-danger"    onclick="return confirm('Are you sure?')" onclick="return confirm('Are you sure?')" href="../process/delete_menu.php?id=<?php echo $data['id']?>">Delete</a>
-											<a type="button" class="btn btn-success" href="../process/edit_menu.php?id=<?php echo $data['id']?>">Update</a>
+										<td><a type="button" class="btn btn-danger"    onclick="return confirm('Are you sure?')" onclick="return confirm('Are you sure?')" href="../process/delete_menu.php?id=<?php echo $data['id']?>"><span class="glyphicon glyphicon-trash"></span></a></a>
+											<a type="button" class="btn btn-success" href="../process/edit_menu.php?id=<?php echo $data['id']?>"><span class="glyphicon glyphicon-pencil"></span></a>
 										</td>
 									</tr>
 									<?php $no++;}?>
