@@ -49,6 +49,14 @@
 		
 			<div class="container">
 			<div class="row">
+				<div class="col-md-9" >
+				</div>
+				<div class="col-md-3" >
+					<button type="button" class="btn btn-default pull-right" id="pushBtn">Push</button>
+					<!--<button type="button" class="btn btn-default" id="pullBtn">Pull</button>-->
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-4" >
 					<div style="height:200px; position: absolute;">
 						<table>
@@ -98,6 +106,57 @@
 				<div class="col-md-4"></div>
 			</div>
 		</div>
+		
+		<div class="modal fade" id="warning-push">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Warning</h4>
+					</div>
+					<div class="modal-body">
+						Are you sure want to push data to the server ?
+					</div>
+					<div class="modal-footer">
+						<button id="push_submitBtn" type="button" class="btn btn-primary">Push</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<?php include('../layout/footercasier.php');?>
+		<script>
+			$(document).ready(function () {
+				$("#pushBtn").click(function (e) { 
+					$("#warning-push").modal('show');
+				});
+
+				$("#push_submitBtn").click(function(){
+					$.ajax({
+						type: "POST",
+						url: "../process/pushDb.php",
+						dataType: "json",
+						success: function (response) {
+							$("#warning-push").modal('hide');
+							alert('push success');
+						},
+						error: function (response) {
+							console.log(response);
+						}
+					});
+				});
+
+				$("#pullBtn").click(function (e) { 
+					$.ajax({
+						type: "POST",
+						url: "../process/pullDb.php",
+						dataType: "json",
+						success: function (response) {
+							console.log(response);
+						}
+					});
+				});
+			});
+		</script>
 	</body>
 </html>
